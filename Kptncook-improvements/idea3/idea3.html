@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KptnCook · Plans & Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --bg:      #161616;
+  --surf:    #1e1e1e;
+  --surf2:   #272727;
+  --surf3:   #313131;
+  --border:  rgba(255,255,255,0.07);
+  --accent:  #e8622a;
+  --accent-s:rgba(232,98,42,0.15);
+  --teal:    #3ecfb5;
+  --teal-s:  rgba(62,207,181,0.14);
+  --tx1:     #f2f2f2;
+  --tx2:     #8e8e8e;
+  --tx3:     #484848;
+  --green:   #52c97e;
+  --green-s: rgba(82,201,126,0.13);
+  --amber:   #f5a623;
+  --amber-s: rgba(245,166,35,0.14);
+  --purple:  #a78bfa;
+  --purple-s:rgba(167,139,250,0.13);
+  --r-sm:    8px;
+  --r:       14px;
+  --r-lg:    20px;
+  --r-pill:  999px;
+}
+
+html,body{
+  height:100%;background:#0c0c0c;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── Desktop bg ─── */
+.scene{
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 55% 40% at 75% 15%, rgba(232,98,42,0.07) 0%,transparent 65%),
+    radial-gradient(ellipse 45% 55% at 20% 80%, rgba(62,207,181,0.05) 0%,transparent 65%),
+    #0c0c0c;
+}
+
+/* ─── Phone ─── */
+.phone{
+  position:relative;z-index:1;
+  width:390px;height:844px;
+  background:var(--bg);border-radius:52px;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.09),
+    0 0 0 12px #0a0a0a,
+    0 0 0 13px rgba(255,255,255,0.05),
+    0 40px 100px rgba(0,0,0,0.85);
+}
+
+/* ─── Status bar ─── */
+.sbar{
+  height:48px;padding:14px 26px 0;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sbar-time{
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;
+}
+.sbar-icons{display:flex;gap:5px;align-items:center;}
+.sbar-icons svg{width:15px;height:15px;fill:var(--tx1);}
+
+/* ─── Page: single scrollable ─── */
+.page{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:none;
+}
+.page::-webkit-scrollbar{display:none;}
+
+/* ─── Page header ─── */
+.page-hdr{
+  padding:12px 22px 10px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;
+  background:rgba(22,22,22,0.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  z-index:10;
+  border-bottom:1px solid var(--border);
+}
+.logo-mark{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.4px;
+}
+.logo-mark em{color:var(--accent);font-style:normal;}
+.hdr-title{
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  color:var(--tx2);letter-spacing:0.2px;
+}
+.close-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surf2);border:none;
+  color:var(--tx2);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s,color .15s;
+}
+.close-btn:active{background:var(--surf3);color:var(--tx1);}
+
+/* ─── Hero collage ─── */
+.hero{
+  position:relative;height:180px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, #222 0%, #161616 100%);
+}
+.hero-grad{
+  position:absolute;bottom:0;left:0;right:0;height:80px;
+  background:linear-gradient(to top,var(--bg),transparent);
+  z-index:2;
+}
+.dish-grid{
+  position:relative;z-index:1;
+  display:flex;gap:10px;align-items:center;
+  transform:rotate(-3deg);
+}
+.dish{
+  border-radius:16px;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:40px;
+  box-shadow:0 8px 28px rgba(0,0,0,0.6);
+}
+.dish:nth-child(1){width:90px;height:90px;background:linear-gradient(135deg,#2e1808,#5a3010);transform:rotate(6deg) translateY(-8px);}
+.dish:nth-child(2){width:110px;height:110px;background:linear-gradient(135deg,#1a2e1a,#2a5020);transform:rotate(-4deg);}
+.dish:nth-child(3){width:85px;height:85px;background:linear-gradient(135deg,#2e2010,#5a3a18);transform:rotate(8deg) translateY(-12px);}
+.star{
+  position:absolute;color:var(--amber);font-size:18px;z-index:3;
+  animation:twinkle 2.5s infinite ease-in-out;
+}
+@keyframes twinkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.7)}}
+
+/* ─── Value moment ─── */
+.value-moment{
+  margin:0 20px 20px;
+  background:linear-gradient(135deg, rgba(62,207,181,0.1), rgba(82,201,126,0.07));
+  border:1px solid rgba(62,207,181,0.22);
+  border-radius:var(--r-lg);padding:16px;
+  animation:fadeUp .5s ease .1s both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.vm-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.vm-icon-wrap{
+  width:42px;height:42px;border-radius:12px;
+  background:var(--teal-s);border:1px solid rgba(62,207,181,0.25);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
+}
+.vm-text{}
+.vm-headline{
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;line-height:1.2;
+}
+.vm-headline span{color:var(--teal);}
+.vm-sub{font-size:11.5px;color:var(--tx2);margin-top:2px;}
+
+.vm-stats{display:flex;gap:8px;}
+.vmstat{
+  flex:1;background:rgba(255,255,255,0.04);
+  border-radius:10px;padding:9px 10px;text-align:center;
+}
+.vmstat-val{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.4px;
+}
+.vmstat-lbl{font-size:9.5px;color:var(--tx2);margin-top:2px;line-height:1.3;}
+
+.vm-cta-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.06);
+}
+.vm-cta-txt{font-size:11.5px;color:var(--tx2);}
+.vm-cta-txt strong{color:var(--green);}
+.vm-cta-link{
+  font-size:12px;font-weight:600;color:var(--teal);
+  background:none;border:none;cursor:pointer;padding:0;
+}
+
+/* ─── Billing toggle ─── */
+.billing-wrap{
+  margin:0 20px 18px;
+  display:flex;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-pill);padding:3px;
+}
+.bt-opt{
+  flex:1;padding:8px;border-radius:var(--r-pill);
+  background:none;border:none;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;
+  color:var(--tx2);cursor:pointer;
+  transition:background .2s,color .2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+}
+.bt-opt.active{background:var(--surf3);color:var(--tx1);}
+.save-pill{
+  background:var(--green-s);border:1px solid rgba(82,201,126,0.25);
+  color:var(--green);font-size:9.5px;font-weight:700;
+  padding:2px 6px;border-radius:var(--r-pill);
+}
+
+/* ─── Plan cards ─── */
+.plans-scroll-wrap{
+  padding:0 20px;margin-bottom:22px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.plans-scroll-wrap::-webkit-scrollbar{display:none;}
+.plans-row{display:flex;gap:10px;width:max-content;}
+
+.plan-card{
+  width:190px;border-radius:var(--r-lg);
+  border:1.5px solid var(--border);background:var(--surf);
+  padding:16px;display:flex;flex-direction:column;
+  flex-shrink:0;position:relative;overflow:hidden;
+  transition:border-color .2s;animation:fadeUp .35s ease both;
+  cursor:pointer;
+}
+.plan-card.sel-free{ border-color:var(--tx3); }
+.plan-card.sel-premium{ border-color:var(--teal);box-shadow:0 0 24px rgba(62,207,181,0.12);}
+.plan-card.sel-pro{ border-color:var(--accent);box-shadow:0 0 24px rgba(232,98,42,0.15);}
+.plan-card:nth-child(1){animation-delay:.05s;}
+.plan-card:nth-child(2){animation-delay:.10s;}
+.plan-card:nth-child(3){animation-delay:.15s;}
+
+.plan-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:var(--r-pill);
+  font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.7px;
+  margin-bottom:12px;width:fit-content;
+}
+.badge-free{background:var(--surf2);color:var(--tx2);}
+.badge-premium{background:var(--teal-s);border:1px solid rgba(62,207,181,0.25);color:var(--teal);}
+.badge-pro{
+  background:linear-gradient(135deg,rgba(232,98,42,0.2),rgba(245,166,35,0.15));
+  border:1px solid rgba(232,98,42,0.3);color:var(--amber);
+}
+.badge-pro::before{content:'★ ';}
+
+.plan-name{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.4px;margin-bottom:4px;
+}
+.plan-price-row{display:flex;align-items:baseline;gap:4px;margin-bottom:4px;}
+.plan-price{
+  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  color:var(--tx1);letter-spacing:-1px;
+}
+.plan-price sup{font-size:13px;letter-spacing:0;vertical-align:super;}
+.plan-period{font-size:11px;color:var(--tx2);}
+.plan-orig{
+  font-size:11px;color:var(--tx3);text-decoration:line-through;margin-bottom:12px;
+}
+.plan-desc{font-size:11.5px;color:var(--tx2);line-height:1.45;margin-bottom:14px;flex:1;}
+
+.plan-highlights{display:flex;flex-direction:column;gap:5px;margin-bottom:14px;}
+.phl{
+  display:flex;align-items:flex-start;gap:6px;
+  font-size:11.5px;color:var(--tx1);line-height:1.35;
+}
+.phl-icon{font-size:12px;flex-shrink:0;margin-top:1px;}
+.phl em{color:var(--tx2);font-style:normal;}
+
+.plan-cta{
+  border-radius:var(--r);border:none;padding:11px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;
+  cursor:pointer;transition:opacity .15s,transform .15s;
+  display:flex;align-items:center;justify-content:center;gap:5px;
+}
+.plan-cta:active{transform:scale(.97);}
+.cta-free{background:var(--surf3);color:var(--tx2);}
+.cta-premium{background:var(--teal);color:#111;}
+.cta-pro{
+  background:linear-gradient(135deg,var(--accent),#c04818);color:#fff;
+  box-shadow:0 4px 18px rgba(232,98,42,0.3);
+}
+
+.popular-ribbon{
+  position:absolute;top:0;right:0;
+  background:var(--accent);color:#fff;
+  font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.8px;
+  padding:4px 10px 4px 12px;
+  clip-path:polygon(8px 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+/* ─── Section label ─── */
+.section-label{
+  padding:0 20px;margin-bottom:12px;
+  font-size:10.5px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--tx3);font-weight:600;
+}
+
+/* ─── Feature matrix ─── */
+.matrix-wrap{
+  margin:0 20px 24px;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;
+}
+.matrix-hdr{
+  display:grid;grid-template-columns:1fr 52px 52px 52px;
+  padding:10px 14px;background:var(--surf2);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:62px;z-index:5;
+}
+.mhdr-feat{font-size:10.5px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.8px;}
+.mhdr-plan{
+  font-size:10px;font-weight:700;text-align:center;
+  letter-spacing:.3px;
+}
+.mhdr-plan.free{color:var(--tx3);}
+.mhdr-plan.premium{color:var(--teal);}
+.mhdr-plan.pro{color:var(--amber);}
+
+.matrix-cat{
+  padding:8px 14px 4px;
+  font-size:9.5px;text-transform:uppercase;letter-spacing:.9px;
+  color:var(--tx3);font-weight:700;
+  background:rgba(255,255,255,0.02);
+  border-bottom:1px solid var(--border);
+}
+
+.mrow{
+  display:grid;grid-template-columns:1fr 52px 52px 52px;
+  padding:10px 14px;align-items:center;
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.mrow:last-child{border-bottom:none;}
+.mrow:hover{background:rgba(255,255,255,0.02);}
+
+.mrow-feat{}
+.mfeat-name{font-size:12.5px;color:var(--tx1);font-weight:500;}
+.mfeat-ex{font-size:10.5px;color:var(--tx2);margin-top:1px;line-height:1.3;}
+
+.mcell{text-align:center;font-size:11.5px;font-weight:600;}
+.mcell.yes-free{color:var(--tx2);}
+.mcell.yes-teal{color:var(--teal);}
+.mcell.yes-amber{color:var(--amber);}
+.mcell.no{color:var(--tx3);}
+.mcell .tick{font-size:14px;}
+.mcell .val{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;}
+.mcell .inf{font-size:16px;}
+
+/* ─── Gated previews ─── */
+.gated-section{margin:0 20px 24px;}
+.gated-intro{
+  font-size:13px;color:var(--tx1);font-weight:500;
+  margin-bottom:14px;line-height:1.45;
+}
+.gated-intro em{color:var(--teal);font-style:normal;font-weight:600;}
+
+/* Usage meter */
+.usage-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px;margin-bottom:12px;
+}
+.usage-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px;
+}
+.usage-label{font-size:12.5px;font-weight:500;color:var(--tx1);}
+.usage-count{font-size:12px;font-weight:600;}
+.usage-count.full{color:var(--accent);}
+.usage-count.ok{color:var(--green);}
+.meter{height:5px;background:var(--surf3);border-radius:3px;overflow:hidden;}
+.meter-fill{height:100%;border-radius:3px;transition:width .6s ease;}
+.meter-fill.full{background:var(--accent);}
+.meter-fill.ok{background:var(--teal);}
+.nudge-row{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;padding-top:10px;border-top:1px solid var(--border);
+}
+.nudge-txt{font-size:11.5px;color:var(--tx2);}
+.nudge-btn{
+  background:var(--accent-s);border:1px solid rgba(232,98,42,0.3);
+  color:var(--accent);border-radius:var(--r-pill);
+  padding:5px 12px;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:background .15s;
+}
+.nudge-btn:active{background:rgba(232,98,42,0.25);}
+
+/* Blurred Skippi preview */
+.gated-preview-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px;
+  position:relative;
+}
+.gpc-label{
+  padding:10px 13px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.gpc-label-icon{font-size:15px;}
+.gpc-label-txt{font-size:12px;font-weight:600;color:var(--tx1);}
+.gpc-label-badge{
+  margin-left:auto;background:var(--amber-s);
+  border:1px solid rgba(245,166,35,0.28);color:var(--amber);
+  font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:var(--r-pill);
+}
+
+/* Blurred chat */
+.blurred-chat{padding:12px;filter:blur(3.5px);opacity:.45;pointer-events:none;}
+.bc-msg{
+  display:flex;gap:8px;margin-bottom:10px;
+}
+.bc-ava{
+  width:26px;height:26px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;font-size:12px;
+}
+.bc-bubble{
+  background:var(--surf2);border-radius:12px;border-bottom-left-radius:3px;
+  padding:9px 12px;font-size:12px;color:var(--tx1);line-height:1.45;max-width:80%;
+}
+
+.gate-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top, rgba(22,22,22,0.98) 50%, rgba(22,22,22,0.5) 100%);
+  padding:16px 14px 14px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.gate-lock{font-size:24px;}
+.gate-msg{
+  font-size:12.5px;color:var(--tx1);text-align:center;line-height:1.45;
+  font-weight:500;
+}
+.gate-msg em{color:var(--teal);font-style:normal;}
+.gate-unlock{
+  background:var(--accent);color:#fff;border:none;
+  border-radius:var(--r);padding:10px 20px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;width:100%;transition:opacity .15s;
+  box-shadow:0 4px 18px rgba(232,98,42,0.3);
+}
+.gate-unlock:active{opacity:.88;}
+.gate-skip{
+  font-size:11.5px;color:var(--tx2);background:none;border:none;
+  cursor:pointer;padding:2px 0;
+}
+
+/* Smart Plan gate */
+.smart-plan-gate{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px;
+}
+.spg-preview{
+  padding:14px;opacity:.35;pointer-events:none;
+  filter:blur(1.5px);
+}
+.spg-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.spg-title{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx1);
+}
+.spg-week{font-size:11px;color:var(--tx2);}
+.spg-days{display:flex;gap:5px;flex-wrap:wrap;}
+.spg-day{
+  background:var(--surf2);border-radius:8px;padding:6px 8px;
+  font-size:11px;color:var(--tx2);
+}
+.spg-day span{display:block;font-family:'Syne',sans-serif;font-weight:700;color:var(--tx1);font-size:12.5px;}
+
+.spg-gate{
+  padding:14px;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:12px;
+}
+.spg-gate-ico{font-size:22px;}
+.spg-gate-body{flex:1;}
+.spg-gate-title{font-size:13px;font-weight:600;color:var(--tx1);margin-bottom:2px;}
+.spg-gate-sub{font-size:11.5px;color:var(--tx2);}
+.spg-gate-btn{
+  background:var(--amber-s);border:1px solid rgba(245,166,35,0.3);
+  color:var(--amber);border-radius:var(--r-pill);
+  padding:7px 12px;font-family:'DM Sans',sans-serif;
+  font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:background .15s;
+}
+.spg-gate-btn:active{background:rgba(245,166,35,0.22);}
+
+/* ─── Main CTA ─── */
+.cta-section{
+  margin:0 20px 32px;
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.main-cta{
+  width:100%;background:linear-gradient(135deg,var(--accent),#c04818);color:#fff;
+  border:none;border-radius:var(--r-lg);padding:17px;
+  font-family:'DM Sans',sans-serif;font-size:15.5px;font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 28px rgba(232,98,42,0.35);
+  transition:transform .15s,opacity .15s;
+}
+.main-cta:active{transform:scale(.98);opacity:.9;}
+.cta-sub{
+  font-size:11.5px;color:var(--tx3);
+  display:flex;align-items:center;gap:5px;
+}
+.cta-sub svg{width:12px;height:12px;fill:var(--tx3);}
+
+/* ─── Toast ─── */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  background:var(--surf3);color:var(--tx1);border:1px solid var(--border);
+  padding:10px 18px;border-radius:var(--r-pill);
+  font-size:12.5px;font-weight:500;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);z-index:9999;
+  animation:fadeUp .28s ease;pointer-events:none;
+}
+
+/* Number counter animation */
+@keyframes countUp{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="scene"></div>
+
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <span class="sbar-time">18:41</span>
+    <div class="sbar-icons">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <!-- PAGE HEADER (sticky) -->
+  <div class="page-hdr">
+    <div class="logo-mark">Kptn<em>Cook</em></div>
+    <div class="hdr-title">Plans & Pricing</div>
+    <button class="close-btn" onclick="toast('Back to app')">✕</button>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="page" id="page">
+
+    <!-- HERO COLLAGE -->
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-grad"></div>
+      <div class="dish-grid">
+        <div class="dish">🍝</div>
+        <div class="dish">🥗</div>
+        <div class="dish">🍛</div>
+      </div>
+      <!-- Stars -->
+      <div class="star" style="top:22px;left:28px;animation-delay:.3s">★</div>
+      <div class="star" style="top:18px;right:36px;animation-delay:.8s;font-size:14px">★</div>
+      <div class="star" style="bottom:44px;left:48px;animation-delay:1.2s;font-size:12px">★</div>
+      <div class="star" style="bottom:50px;right:26px;animation-delay:.5s">★</div>
+    </div>
+
+    <!-- VALUE MOMENT -->
+    <div class="value-moment" id="value-moment">
+      <div class="vm-top">
+        <div class="vm-icon-wrap">⏱</div>
+        <div class="vm-text">
+          <div class="vm-headline">You've saved <span id="min-count">0</span> min this week</div>
+          <div class="vm-sub">planning &amp; cooking smarter with KptnCook</div>
+        </div>
+      </div>
+      <div class="vm-stats">
+        <div class="vmstat">
+          <div class="vmstat-val" style="color:var(--teal)">3</div>
+          <div class="vmstat-lbl">Recipes used this week</div>
+        </div>
+        <div class="vmstat">
+          <div class="vmstat-val" style="color:var(--green)">€0</div>
+          <div class="vmstat-lbl">Deal savings (Free)</div>
+        </div>
+        <div class="vmstat">
+          <div class="vmstat-val" style="color:var(--amber)">€12</div>
+          <div class="vmstat-lbl">Potential with Pro</div>
+        </div>
+      </div>
+      <div class="vm-cta-row">
+        <span class="vm-cta-txt">Pro users save <strong>avg €48/month</strong> on groceries</span>
+        <button class="vm-cta-link" onclick="scrollToPlans()">See how →</button>
+      </div>
+    </div>
+
+    <!-- BILLING TOGGLE -->
+    <div class="billing-wrap" id="billing-wrap">
+      <button class="bt-opt" id="bt-monthly" onclick="setBilling('monthly')">Monthly</button>
+      <button class="bt-opt active" id="bt-annual" onclick="setBilling('annual')">
+        Annual <span class="save-pill">Save 33%</span>
+      </button>
+    </div>
+
+    <!-- PLAN CARDS -->
+    <div class="section-label">Choose your plan</div>
+    <div class="plans-scroll-wrap" id="plans-anchor">
+      <div class="plans-row">
+
+        <!-- FREE -->
+        <div class="plan-card sel-free" id="card-free" onclick="selectPlan('free')">
+          <div class="plan-badge badge-free">Free</div>
+          <div class="plan-name">Free</div>
+          <div class="plan-price-row">
+            <div class="plan-price">€0</div>
+          </div>
+          <div class="plan-orig" style="visibility:hidden;">placeholder</div>
+          <div class="plan-highlights">
+            <div class="phl"><span class="phl-icon">🍽️</span><span>3 daily recipes<br><em>resets each morning</em></span></div>
+            <div class="phl"><span class="phl-icon">🤖</span><span>1 Skippi question/day<br><em>basic suggestions only</em></span></div>
+            <div class="phl"><span class="phl-icon">🛒</span><span>Shopping list<br><em>manual entry</em></span></div>
+          </div>
+          <button class="plan-cta cta-free">Current plan</button>
+        </div>
+
+        <!-- PREMIUM -->
+        <div class="plan-card sel-premium" id="card-premium" onclick="selectPlan('premium')">
+          <div class="plan-badge badge-premium">Premium</div>
+          <div class="plan-name">Premium</div>
+          <div class="plan-price-row">
+            <div class="plan-price" id="price-premium"><sup>€</sup><span id="pv-premium">3.33</span></div>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-orig" id="orig-premium">€4.99/mo billed monthly</div>
+          <div class="plan-highlights">
+            <div class="phl"><span class="phl-icon">♾️</span><span>Unlimited recipes<br><em>all 5,000+ dishes</em></span></div>
+            <div class="phl"><span class="phl-icon">📅</span><span>Meal planning<br><em>up to 7 days ahead</em></span></div>
+            <div class="phl"><span class="phl-icon">🤖</span><span>5 Skippi questions/day<br><em>with context memory</em></span></div>
+            <div class="phl"><span class="phl-icon">🥦</span><span>Pantry tracking</span></div>
+          </div>
+          <button class="plan-cta cta-premium" onclick="toast('Starting Premium trial…')">Try free 7 days</button>
+        </div>
+
+        <!-- PRO -->
+        <div class="plan-card sel-pro" id="card-pro" onclick="selectPlan('pro')">
+          <div class="popular-ribbon">Most popular</div>
+          <div class="plan-badge badge-pro">Pro + AI</div>
+          <div class="plan-name">Pro</div>
+          <div class="plan-price-row">
+            <div class="plan-price"><sup>€</sup><span id="pv-pro">4.99</span></div>
+            <span class="plan-period">/mo</span>
+          </div>
+          <div class="plan-orig" id="orig-pro">€7.99/mo billed monthly</div>
+          <div class="plan-highlights">
+            <div class="phl"><span class="phl-icon">🤖</span><span>Unlimited Skippi<br><em>full conversational AI</em></span></div>
+            <div class="phl"><span class="phl-icon">✨</span><span>Smart Plans weekly<br><em>AI-generated 7-day plans</em></span></div>
+            <div class="phl"><span class="phl-icon">🏷️</span><span>Deal alerts<br><em>REWE, EDEKA &amp; more</em></span></div>
+            <div class="phl"><span class="phl-icon">🧺</span><span>Use What I Have mode</span></div>
+            <div class="phl"><span class="phl-icon">⏰</span><span>Expiry First scheduling</span></div>
+          </div>
+          <button class="plan-cta cta-pro" onclick="toast('Starting Pro trial…')">Try free 7 days →</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FEATURE MATRIX -->
+    <div class="section-label">Full feature comparison</div>
+    <div class="matrix-wrap">
+
+      <div class="matrix-hdr">
+        <div class="mhdr-feat">Feature</div>
+        <div class="mhdr-plan free">Free</div>
+        <div class="mhdr-plan premium">Plus</div>
+        <div class="mhdr-plan pro">Pro</div>
+      </div>
+
+      <div class="matrix-cat">Recipes & Discovery</div>
+
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Daily recipes</div>
+          <div class="mfeat-ex">Curated for today</div>
+        </div>
+        <div class="mcell yes-free"><span class="val">3</span></div>
+        <div class="mcell yes-teal"><span class="inf">∞</span></div>
+        <div class="mcell yes-amber"><span class="inf">∞</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Recipe library</div>
+          <div class="mfeat-ex">Search 5,000+ dishes</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-teal"><span class="tick">✓</span></div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Fridge Finds</div>
+          <div class="mfeat-ex">3 ingredient search</div>
+        </div>
+        <div class="mcell yes-free"><span class="val">3</span></div>
+        <div class="mcell yes-teal"><span class="inf">∞</span></div>
+        <div class="mcell yes-amber"><span class="inf">∞</span></div>
+      </div>
+
+      <div class="matrix-cat">AI & Skippi</div>
+
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Skippi questions</div>
+          <div class="mfeat-ex">"What can I make with…"</div>
+        </div>
+        <div class="mcell yes-free"><span class="val">1/day</span></div>
+        <div class="mcell yes-teal"><span class="val">5/day</span></div>
+        <div class="mcell yes-amber"><span class="inf">∞</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Context memory</div>
+          <div class="mfeat-ex">Skippi remembers your prefs</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Smart Plans</div>
+          <div class="mfeat-ex">AI-built 7-day meal plans</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+
+      <div class="matrix-cat">Pantry & Shopping</div>
+
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Shopping list</div>
+          <div class="mfeat-ex">Auto-generated from plan</div>
+        </div>
+        <div class="mcell yes-free" title="Manual only"><span style="font-size:10px;">Manual</span></div>
+        <div class="mcell yes-teal"><span class="tick">✓</span></div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Pantry tracking</div>
+          <div class="mfeat-ex">Quantities &amp; expiry dates</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-teal"><span class="tick">✓</span></div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Use What I Have</div>
+          <div class="mfeat-ex">Match recipes to leftovers</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Expiry First mode</div>
+          <div class="mfeat-ex">Use what expires soonest</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Deal alerts</div>
+          <div class="mfeat-ex">REWE, EDEKA &amp; more</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Receipt scanning</div>
+          <div class="mfeat-ex">OCR auto-fill pantry</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="tick">✓</span></div>
+      </div>
+
+      <div class="matrix-cat">Account</div>
+
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Ads</div>
+        </div>
+        <div class="mcell yes-free" style="color:var(--accent)"><span style="font-size:11px">Yes</span></div>
+        <div class="mcell yes-teal"><span style="font-size:11px;color:var(--tx2)">None</span></div>
+        <div class="mcell yes-amber"><span style="font-size:11px;color:var(--tx2)">None</span></div>
+      </div>
+      <div class="mrow">
+        <div class="mrow-feat">
+          <div class="mfeat-name">Family sharing</div>
+          <div class="mfeat-ex">Up to 5 family members</div>
+        </div>
+        <div class="mcell no">—</div>
+        <div class="mcell no">—</div>
+        <div class="mcell yes-amber"><span class="val" style="font-size:10px">Up to 5</span></div>
+      </div>
+
+    </div>
+
+    <!-- GATED PREVIEWS -->
+    <div class="section-label">How we gate features</div>
+    <div class="gated-section">
+
+      <p class="gated-intro">No hard walls. When you hit a limit we show you a <em>preview + a nudge</em> — you stay in the flow.</p>
+
+      <!-- Usage meter -->
+      <div class="usage-card">
+        <div class="usage-row">
+          <span class="usage-label">🍽️ Daily recipes</span>
+          <span class="usage-count full" id="recipe-count-lbl">3 / 3 used</span>
+        </div>
+        <div class="meter"><div class="meter-fill full" id="recipe-meter" style="width:100%"></div></div>
+
+        <div class="usage-row" style="margin-top:12px;">
+          <span class="usage-label">🤖 Skippi questions</span>
+          <span class="usage-count full" id="skippi-count-lbl">1 / 1 used</span>
+        </div>
+        <div class="meter"><div class="meter-fill full" id="skippi-meter" style="width:100%"></div></div>
+
+        <div class="nudge-row">
+          <span class="nudge-txt">Limits reset at midnight · or unlock now</span>
+          <button class="nudge-btn" onclick="toast('Upgrade flow → Premium')">Upgrade →</button>
+        </div>
+      </div>
+
+      <!-- Skippi blurred gate -->
+      <div class="gated-preview-card">
+        <div class="gpc-label">
+          <span class="gpc-label-icon">🤖</span>
+          <span class="gpc-label-txt">Skippi suggestion</span>
+          <span class="gpc-label-badge">Premium / Pro</span>
+        </div>
+        <div class="blurred-chat">
+          <div class="bc-msg">
+            <div class="bc-ava">🤖</div>
+            <div class="bc-bubble">
+              With your leftover chickpeas and cream, here's what I'd make tonight. This is a great combo because the protein…
+            </div>
+          </div>
+          <div class="bc-msg" style="flex-direction:row-reverse">
+            <div class="bc-ava" style="background:linear-gradient(135deg,var(--accent),#b04818)">👤</div>
+            <div class="bc-bubble" style="background:var(--accent-s);border-bottom-right-radius:3px;border-bottom-left-radius:12px;">
+              Can you give me a full recipe with timing?
+            </div>
+          </div>
+          <div class="bc-msg">
+            <div class="bc-ava">🤖</div>
+            <div class="bc-bubble">
+              Absolutely! Here's the full step-by-step for Creamy Chickpea Pasta: Start by heating olive oil over medium heat…
+            </div>
+          </div>
+        </div>
+        <div class="gate-overlay">
+          <div class="gate-lock">🔒</div>
+          <div class="gate-msg">You've used your <em>1 free Skippi question</em> today.<br>Upgrade to ask unlimited questions with full answers.</div>
+          <button class="gate-unlock" onclick="toast('Upgrade flow → Premium')">Unlock unlimited Skippi</button>
+          <button class="gate-skip" onclick="this.closest('.gated-preview-card').querySelector('.gate-overlay').style.display='none'">Not now — wait until tomorrow</button>
+        </div>
+      </div>
+
+      <!-- Smart Plan gate -->
+      <div class="smart-plan-gate">
+        <div class="spg-preview">
+          <div class="spg-row">
+            <div class="spg-title">Smart Plan · Week 23</div>
+            <div class="spg-week">Jun 2–8</div>
+          </div>
+          <div class="spg-days">
+            <div class="spg-day">Mon<span>🍝 Pasta</span></div>
+            <div class="spg-day">Tue<span>🐟 Salmon</span></div>
+            <div class="spg-day">Wed<span>🥘 Stew</span></div>
+            <div class="spg-day">Thu<span>🍳 Eggs</span></div>
+            <div class="spg-day">Fri<span>🥗 Salad</span></div>
+            <div class="spg-day">Sat<span>🍕 Pizza</span></div>
+            <div class="spg-day">Sun<span>🥞 Brunch</span></div>
+          </div>
+        </div>
+        <div class="spg-gate">
+          <div class="spg-gate-ico">✨</div>
+          <div class="spg-gate-body">
+            <div class="spg-gate-title">Smart Plans are Pro only</div>
+            <div class="spg-gate-sub">AI-built weekly plans with deals & expiry scheduling</div>
+          </div>
+          <button class="spg-gate-btn" onclick="toast('Upgrade flow → Pro')">Go Pro</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- MAIN CTA -->
+    <div class="cta-section">
+      <button class="main-cta" onclick="toast('Starting your 7-day Pro trial…')">
+        Start 7-day free trial — Pro
+      </button>
+      <div class="cta-sub">
+        <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        Cancel anytime · Secure with App Store
+      </div>
+      <div style="font-size:11px;color:var(--tx3);text-align:center;line-height:1.5;">
+        No charge during trial · Plans renew automatically
+      </div>
+    </div>
+
+  </div><!-- /page -->
+
+</div><!-- /phone -->
+
+<script>
+/* ══════════ BILLING TOGGLE ══════════ */
+const PRICES = {
+  annual:  {premium:'3.33', pro:'4.99', premiumOrig:'€4.99/mo billed monthly', proOrig:'€7.99/mo billed monthly'},
+  monthly: {premium:'4.99', pro:'7.99', premiumOrig:'',                         proOrig:''},
+};
+let billing = 'annual';
+
+function setBilling(mode) {
+  billing = mode;
+  document.getElementById('bt-monthly').classList.toggle('active', mode === 'monthly');
+  document.getElementById('bt-annual').classList.toggle('active',  mode === 'annual');
+
+  const p = PRICES[mode];
+  document.getElementById('pv-premium').textContent = p.premium;
+  document.getElementById('pv-pro').textContent     = p.pro;
+  document.getElementById('orig-premium').textContent = p.premiumOrig;
+  document.getElementById('orig-pro').textContent     = p.proOrig;
+}
+
+/* ══════════ PLAN SELECT ══════════ */
+let selectedPlan = null;
+function selectPlan(plan) {
+  ['free','premium','pro'].forEach(p => {
+    const card = document.getElementById('card-' + p);
+    card.style.transform = p === plan ? 'translateY(-4px)' : '';
+  });
+  selectedPlan = plan;
+  if (plan !== 'free') toast(`${plan.charAt(0).toUpperCase()+plan.slice(1)} plan selected — try 7 days free`);
+}
+
+/* ══════════ VALUE MOMENT COUNTER ══════════ */
+function animateCounter(el, target, duration) {
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+    el.textContent = Math.round(ease * target);
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = target;
+  }
+  requestAnimationFrame(step);
+}
+
+/* ══════════ USAGE METER ANIMATION ══════════ */
+function animateMeters() {
+  const rMeter = document.getElementById('recipe-meter');
+  const sMeter = document.getElementById('skippi-meter');
+  rMeter.style.width = '0%';
+  sMeter.style.width = '0%';
+  setTimeout(() => { rMeter.style.width = '100%'; }, 300);
+  setTimeout(() => { sMeter.style.width = '100%'; }, 600);
+}
+
+/* ══════════ SCROLL TO PLANS ══════════ */
+function scrollToPlans() {
+  document.getElementById('plans-anchor').scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+/* ══════════ TOAST ══════════ */
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3200);
+}
+
+/* ══════════ INIT ══════════ */
+window.addEventListener('load', () => {
+  // Animate the minute counter
+  setTimeout(() => {
+    const el = document.getElementById('min-count');
+    animateCounter(el, 47, 1400);
+  }, 400);
+
+  // Animate meters after a short delay
+  setTimeout(animateMeters, 700);
+});
+</script>
+</body>
+</html>

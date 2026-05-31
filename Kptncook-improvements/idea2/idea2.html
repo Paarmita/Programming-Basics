@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KptnCook · Smart Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root {
+  --bg:      #161616;
+  --surf:    #1e1e1e;
+  --surf2:   #272727;
+  --surf3:   #313131;
+  --border:  rgba(255,255,255,0.07);
+  --accent:  #e8622a;
+  --accent-s:rgba(232,98,42,0.14);
+  --teal:    #3ecfb5;
+  --teal-s:  rgba(62,207,181,0.14);
+  --tx1:     #f2f2f2;
+  --tx2:     #8e8e8e;
+  --tx3:     #484848;
+  --green:   #52c97e;
+  --green-s: rgba(82,201,126,0.14);
+  --amber:   #f5a623;
+  --amber-s: rgba(245,166,35,0.14);
+  --purple:  #a78bfa;
+  --purple-s:rgba(167,139,250,0.14);
+  --r-sm:    8px;
+  --r:       14px;
+  --r-lg:    22px;
+  --r-pill:  999px;
+}
+
+html,body {
+  height:100%;background:#0c0c0c;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'DM Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+.scene {
+  position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 50% 40% at 80% 20%, rgba(62,207,181,0.07) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 50% at 10% 70%, rgba(167,139,250,0.05) 0%,transparent 70%),
+    #0c0c0c;
+}
+
+/* ─── Phone shell ─── */
+.phone {
+  position:relative;z-index:1;
+  width:390px;height:844px;
+  background:var(--bg);border-radius:52px;
+  overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.09),
+    0 0 0 12px #0a0a0a,
+    0 0 0 13px rgba(255,255,255,0.05),
+    0 40px 100px rgba(0,0,0,0.85),
+    0 0 150px rgba(62,207,181,0.04);
+}
+
+/* ─── Status bar ─── */
+.sbar {
+  height:48px;padding:14px 26px 0;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sbar-time {
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;
+}
+.sbar-right {display:flex;align-items:center;gap:6px;}
+.sbar-right svg{width:15px;height:15px;fill:var(--tx1);}
+.pro-chip {
+  background:linear-gradient(135deg,#b07d18,#f5a623);
+  color:#1a1000;font-size:9px;font-weight:800;
+  letter-spacing:0.8px;text-transform:uppercase;
+  padding:2px 7px;border-radius:var(--r-pill);
+}
+
+/* ─── App header ─── */
+.app-hdr {
+  padding:10px 22px 8px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo-col{display:flex;flex-direction:column;gap:4px;}
+.logo-mark {
+  font-family:'Syne',sans-serif;font-size:21px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.5px;line-height:1;
+}
+.logo-mark em{color:var(--accent);font-style:normal;}
+.plan-pill {
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--amber-s);
+  border:1px solid rgba(245,166,35,0.3);
+  color:var(--amber);
+  font-size:9.5px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.9px;
+  padding:3px 8px;border-radius:var(--r-pill);width:fit-content;
+}
+.plan-pill::before{
+  content:'★';font-size:8px;
+}
+.hdr-date {
+  text-align:right;
+}
+.hdr-date-main{
+  font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  color:var(--tx1);
+}
+.hdr-date-sub{font-size:11px;color:var(--tx2);margin-top:1px;}
+
+/* ─── Screens ─── */
+.screens{flex:1;overflow:hidden;position:relative;}
+.screen {
+  position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;
+  padding-bottom:14px;opacity:0;transform:translateX(28px);
+  transition:opacity .28s ease,transform .28s ease;
+  pointer-events:none;scrollbar-width:none;
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.screen.out-left{opacity:0;transform:translateX(-28px);}
+
+/* ─── Bottom nav ─── */
+.bnav {
+  height:78px;flex-shrink:0;background:var(--surf);
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;padding-top:8px;
+}
+.nbtn {
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;
+  color:var(--tx3);padding:5px 0;transition:color .18s;
+}
+.nbtn.active{color:var(--teal);}
+.nbtn svg{width:21px;height:21px;transition:transform .18s;}
+.nbtn.active svg{transform:scale(1.08);}
+.nlabel{font-size:9.5px;font-weight:500;letter-spacing:0.2px;}
+.ndot{width:4px;height:4px;border-radius:50%;background:var(--teal);opacity:0;transition:opacity .18s;}
+.nbtn.active .ndot{opacity:1;}
+
+/* ══════════════════════════════════
+   SETUP / WIZARD SCREEN
+══════════════════════════════════ */
+
+/* Progress bar */
+.progress-bar {
+  margin:4px 22px 0;height:2px;
+  background:var(--surf3);border-radius:2px;flex-shrink:0;overflow:hidden;
+}
+.progress-fill {
+  height:100%;background:var(--teal);border-radius:2px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+}
+
+/* Wizard wrapper inside screen */
+.wizard {position:relative;overflow:hidden;}
+.wstep {
+  display:none;flex-direction:column;
+  padding:20px 22px 0;
+  animation:wIn .32s ease both;
+}
+.wstep.active{display:flex;}
+.wstep.slide-out{animation:wOut .25s ease both;}
+@keyframes wIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+@keyframes wOut{from{opacity:1;transform:translateX(0)}to{opacity:0;transform:translateX(-30px)}}
+
+/* Step 0: Intro */
+.intro-icon{font-size:48px;margin-bottom:14px;display:block;}
+.intro-h {
+  font-family:'Syne',sans-serif;font-size:26px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.6px;line-height:1.15;
+  margin-bottom:10px;
+}
+.intro-h em{color:var(--teal);font-style:normal;}
+.intro-sub{font-size:14px;color:var(--tx2);line-height:1.55;margin-bottom:24px;}
+.intro-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.istep {
+  display:flex;align-items:center;gap:12px;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px 14px;
+}
+.istep-num {
+  width:24px;height:24px;border-radius:50%;
+  background:var(--teal-s);border:1px solid rgba(62,207,181,0.25);
+  color:var(--teal);font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.istep-txt{font-size:13px;color:var(--tx1);font-weight:500;}
+
+/* Step heading */
+.step-q {
+  font-family:'Syne',sans-serif;font-size:22px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.5px;line-height:1.2;
+  margin-bottom:6px;
+}
+.step-hint{font-size:12.5px;color:var(--tx2);margin-bottom:22px;line-height:1.45;}
+
+/* Energy cards */
+.energy-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.ecard {
+  background:var(--surf);border:1.5px solid var(--border);
+  border-radius:var(--r-lg);padding:16px 18px;
+  display:flex;align-items:center;gap:14px;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .15s;
+}
+.ecard:active{transform:scale(.98);}
+.ecard.sel{border-color:var(--teal);background:var(--teal-s);}
+.ecard-ico{font-size:32px;flex-shrink:0;}
+.ecard-body{}
+.ecard-title{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;
+  color:var(--tx1);margin-bottom:2px;
+}
+.ecard-sub{font-size:12px;color:var(--tx2);}
+.ecard-check {
+  margin-left:auto;width:20px;height:20px;border-radius:50%;
+  border:1.5px solid var(--tx3);flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .2s,border-color .2s;
+}
+.ecard.sel .ecard-check{background:var(--teal);border-color:var(--teal);}
+.ecard.sel .ecard-check::after{content:'✓';font-size:11px;color:#111;font-weight:700;}
+
+/* Guest picker */
+.guest-picker{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-bottom:20px;
+}
+.gpicker-btn {
+  width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--surf2);color:var(--tx1);font-size:22px;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .15s;
+}
+.gpicker-btn:active{transform:scale(.9);}
+.gpicker-num{
+  font-family:'Syne',sans-serif;font-size:52px;font-weight:800;
+  color:var(--tx1);width:100px;text-align:center;line-height:1;
+  transition:transform .15s;
+}
+.guest-label{
+  text-align:center;font-size:13px;color:var(--tx2);
+  margin-bottom:28px;margin-top:-8px;
+}
+
+.guest-days-hdr{
+  font-size:11px;text-transform:uppercase;letter-spacing:0.9px;
+  color:var(--tx3);font-weight:600;margin-bottom:10px;
+}
+.guest-days{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;}
+.gday{
+  padding:7px 12px;border-radius:var(--r-pill);
+  border:1px solid var(--border);background:var(--surf);
+  color:var(--tx2);font-size:12.5px;font-weight:500;cursor:pointer;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.gday.sel{
+  background:var(--teal-s);border-color:rgba(62,207,181,0.3);color:var(--teal);
+}
+
+/* Budget slider */
+.budget-display{
+  text-align:center;margin-bottom:18px;
+}
+.budget-num{
+  font-family:'Syne',sans-serif;font-size:48px;font-weight:800;
+  color:var(--tx1);letter-spacing:-2px;line-height:1;
+}
+.budget-num sup{font-size:22px;vertical-align:super;letter-spacing:0;}
+.budget-per{font-size:12.5px;color:var(--tx2);margin-top:4px;}
+
+input[type=range].slider {
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:4px;background:var(--surf3);border-radius:2px;
+  outline:none;cursor:pointer;margin-bottom:6px;
+}
+input[type=range].slider::-webkit-slider-thumb {
+  -webkit-appearance:none;width:22px;height:22px;
+  border-radius:50%;background:var(--teal);
+  box-shadow:0 2px 12px rgba(62,207,181,0.38);cursor:pointer;
+  transition:transform .15s;
+}
+input[type=range].slider::-webkit-slider-thumb:active{transform:scale(1.25);}
+.slider-ends{display:flex;justify-content:space-between;margin-bottom:28px;}
+.slider-ends span{font-size:10.5px;color:var(--tx3);}
+
+.budget-breakdown{
+  display:flex;gap:8px;margin-bottom:28px;
+}
+.bdown-card{
+  flex:1;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px;text-align:center;
+}
+.bdown-label{font-size:10.5px;color:var(--tx2);margin-bottom:4px;}
+.bdown-val{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx1);
+}
+
+/* Dietary prefs */
+.diet-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;}
+.dtag{
+  padding:9px 14px;border-radius:var(--r-pill);
+  border:1px solid var(--border);background:var(--surf);
+  color:var(--tx2);font-size:13px;font-weight:500;cursor:pointer;
+  display:flex;align-items:center;gap:6px;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.dtag.sel{background:var(--teal-s);border-color:rgba(62,207,181,0.3);color:var(--teal);}
+.dtag-ico{font-size:15px;}
+
+/* Generating step */
+.gen-wrap{
+  padding:32px 22px 0;display:flex;flex-direction:column;
+  align-items:center;
+}
+.gen-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:34px;margin-bottom:20px;
+  box-shadow:0 0 0 0 rgba(62,207,181,0.4);
+  animation:genPulse 2s infinite;
+}
+@keyframes genPulse{
+  0%{box-shadow:0 0 0 0 rgba(62,207,181,0.4)}
+  70%{box-shadow:0 0 0 18px rgba(62,207,181,0)}
+  100%{box-shadow:0 0 0 0 rgba(62,207,181,0)}
+}
+.gen-title{
+  font-family:'Syne',sans-serif;font-size:20px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.4px;text-align:center;margin-bottom:8px;
+}
+.gen-sub{font-size:13px;color:var(--tx2);text-align:center;margin-bottom:28px;}
+.gen-steps{width:100%;display:flex;flex-direction:column;gap:10px;margin-bottom:28px;}
+.gstep-row{
+  display:flex;align-items:center;gap:12px;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:12px 14px;
+}
+.gstep-ico{font-size:18px;flex-shrink:0;width:24px;text-align:center;}
+.gstep-txt{font-size:13px;color:var(--tx2);flex:1;}
+.gstep-row.done .gstep-txt{color:var(--tx1);}
+.gstep-status{
+  width:20px;height:20px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--tx3);
+  display:flex;align-items:center;justify-content:center;
+}
+.gstep-row.done .gstep-status{
+  background:var(--green);border-color:var(--green);
+}
+.gstep-row.done .gstep-status::after{content:'✓';font-size:11px;color:#111;font-weight:700;}
+.gstep-row.spinning .gstep-status{
+  border-color:var(--teal);border-top-color:transparent;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Step nav buttons */
+.step-btn-row{display:flex;gap:10px;margin-top:auto;padding:20px 0;}
+.btn-back{
+  background:var(--surf2);color:var(--tx1);border:1px solid var(--border);
+  border-radius:var(--r);padding:14px 18px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;
+  cursor:pointer;transition:background .15s;
+}
+.btn-back:active{background:var(--surf3);}
+.btn-next{
+  flex:1;background:var(--teal);color:#111;border:none;
+  border-radius:var(--r);padding:14px;
+  font-family:'DM Sans',sans-serif;font-size:14.5px;font-weight:700;
+  cursor:pointer;box-shadow:0 4px 20px rgba(62,207,181,0.28);
+  transition:transform .15s,opacity .15s;display:flex;
+  align-items:center;justify-content:center;gap:8px;
+}
+.btn-next:active{transform:scale(.97);}
+.btn-next svg{width:17px;height:17px;}
+.btn-next:disabled{opacity:.4;pointer-events:none;}
+
+/* ══════════════════════════════════
+   PLAN SCREEN
+══════════════════════════════════ */
+
+/* Toggle row */
+.plan-toggles{
+  padding:0 22px;margin-bottom:16px;
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.expiry-toggle{
+  flex:1;display:flex;align-items:center;gap:9px;
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 12px;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.expiry-toggle.on{
+  background:var(--amber-s);border-color:rgba(245,166,35,0.3);
+}
+.et-icon{font-size:16px;}
+.et-body{flex:1;}
+.et-label{font-size:12.5px;font-weight:600;color:var(--tx1);}
+.et-sub{font-size:10.5px;color:var(--tx2);margin-top:1px;}
+.toggle-pill{
+  width:36px;height:20px;border-radius:var(--r-pill);
+  background:var(--surf3);flex-shrink:0;position:relative;
+  transition:background .2s;
+}
+.toggle-pill.on{background:var(--amber);}
+.toggle-knob{
+  position:absolute;top:2px;left:2px;width:16px;height:16px;
+  border-radius:50%;background:#fff;
+  transition:left .2s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.toggle-pill.on .toggle-knob{left:18px;}
+
+.week-stats{
+  padding:0 22px;margin-bottom:14px;
+  display:flex;gap:8px;
+}
+.wstat{
+  flex:1;background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:10px 12px;text-align:center;
+}
+.wstat-val{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.4px;
+}
+.wstat-lbl{font-size:10px;color:var(--tx2);margin-top:2px;}
+
+/* Day pills - horizontal scroll */
+.day-scroll-wrap{
+  padding:0 22px;margin-bottom:16px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.day-scroll-wrap::-webkit-scrollbar{display:none;}
+.day-pills{display:flex;gap:7px;width:max-content;}
+.dpill{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 12px;border-radius:var(--r);
+  border:1px solid var(--border);background:var(--surf);
+  cursor:pointer;transition:all .18s;min-width:48px;
+}
+.dpill.active{background:var(--teal-s);border-color:rgba(62,207,181,0.3);}
+.dpill-name{font-size:10.5px;font-weight:600;color:var(--tx2);text-transform:uppercase;letter-spacing:0.6px;}
+.dpill.active .dpill-name{color:var(--teal);}
+.dpill-num{
+  font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--tx1);
+}
+.dpill-dot{width:4px;height:4px;border-radius:50%;background:transparent;}
+.dpill.has-deal .dpill-dot{background:var(--amber);}
+.dpill.expiry .dpill-dot{background:var(--accent);}
+
+/* Expiry banner */
+.expiry-banner{
+  margin:0 22px 14px;
+  background:var(--accent-s);border:1px solid rgba(232,98,42,0.22);
+  border-radius:var(--r);padding:10px 13px;
+  display:none;align-items:center;gap:10px;
+}
+.expiry-banner.show{display:flex;}
+.eb-ico{font-size:17px;}
+.eb-txt{font-size:12px;color:var(--accent);line-height:1.4;}
+.eb-txt strong{font-weight:600;}
+
+/* Meal cards */
+.day-section{padding:0 22px;}
+.meal-section-label{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--tx3);font-weight:600;margin-bottom:8px;margin-top:14px;
+}
+.meal-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;margin-bottom:12px;
+  animation:fadeUp .3s ease both;cursor:pointer;
+  transition:transform .2s;
+}
+.meal-card:active{transform:scale(.985);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+.meal-img{
+  height:130px;position:relative;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  padding:10px;
+}
+.meal-img-bg{position:absolute;inset:0;}
+.meal-img-grad{
+  position:absolute;bottom:0;left:0;right:0;height:70px;
+  background:linear-gradient(to top,rgba(20,20,20,.96),transparent);z-index:1;
+}
+.meal-emoji{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);font-size:52px;
+  opacity:0.65;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+}
+.meal-badges{position:relative;z-index:2;display:flex;flex-direction:column;gap:5px;align-items:flex-end;}
+.mbadge{
+  padding:4px 9px;border-radius:var(--r-pill);
+  font-size:10.5px;font-weight:700;
+  display:flex;align-items:center;gap:3px;
+}
+.mbadge.deal{background:rgba(245,166,35,0.22);border:1px solid rgba(245,166,35,0.38);color:var(--amber);}
+.mbadge.expiry{background:rgba(232,98,42,0.2);border:1px solid rgba(232,98,42,0.35);color:var(--accent);}
+.mbadge.new{background:var(--purple-s);border:1px solid rgba(167,139,250,0.3);color:var(--purple);}
+
+.meal-body{padding:12px 13px;}
+.meal-name{
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;margin-bottom:5px;
+}
+.meal-meta{display:flex;gap:10px;align-items:center;margin-bottom:10px;}
+.mmeta{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--tx2);}
+.mmeta svg{width:11px;height:11px;}
+
+.ing-preview{display:flex;flex-wrap:wrap;gap:5px;}
+.ing-chip{
+  padding:3px 8px;border-radius:var(--r-pill);font-size:10.5px;font-weight:500;
+  display:flex;align-items:center;gap:3px;
+}
+.ing-chip.pantry{background:var(--green-s);color:var(--green);border:1px solid rgba(82,201,126,0.18);}
+.ing-chip.deal{background:var(--amber-s);color:var(--amber);border:1px solid rgba(245,166,35,0.2);}
+.ing-chip.expiring{background:var(--accent-s);color:var(--accent);border:1px solid rgba(232,98,42,0.2);}
+
+.meal-foot{
+  padding:10px 13px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.meal-savings{font-size:12px;color:var(--green);}
+.meal-savings strong{font-weight:700;}
+.btn-swap{
+  background:var(--surf2);color:var(--tx1);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  padding:6px 12px;font-family:'DM Sans',sans-serif;
+  font-size:11.5px;font-weight:500;cursor:pointer;transition:background .15s;
+}
+.btn-swap:active{background:var(--surf3);}
+
+/* ══════════════════════════════════
+   DEALS SCREEN
+══════════════════════════════════ */
+
+.store-tabs-wrap{
+  padding:0 22px;margin-bottom:18px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.store-tabs-wrap::-webkit-scrollbar{display:none;}
+.store-tabs{display:flex;gap:8px;width:max-content;}
+.stab{
+  padding:8px 16px;border-radius:var(--r-pill);
+  border:1.5px solid var(--border);background:var(--surf);
+  font-size:12.5px;font-weight:700;color:var(--tx2);cursor:pointer;
+  transition:all .18s;display:flex;align-items:center;gap:7px;
+}
+.stab-dot{width:8px;height:8px;border-radius:50%;}
+.stab.active{border-color:rgba(255,255,255,0.25);color:var(--tx1);background:var(--surf2);}
+.stab.rewe{} .stab.rewe .stab-dot{background:#d32f2f;}
+.stab.edeka{} .stab.edeka .stab-dot{background:#f9a825;}
+.stab.kaufland{} .stab.kaufland .stab-dot{background:#1976d2;}
+.stab.penny{} .stab.penny .stab-dot{background:#c62828;}
+
+.savings-banner{
+  margin:0 22px 18px;
+  background:linear-gradient(135deg,rgba(82,201,126,0.12),rgba(62,207,181,0.08));
+  border:1px solid rgba(82,201,126,0.22);
+  border-radius:var(--r);padding:14px 16px;
+  display:flex;align-items:center;gap:12px;
+}
+.sb-left{flex:1;}
+.sb-title{
+  font-family:'Syne',sans-serif;font-size:18px;font-weight:800;
+  color:var(--green);letter-spacing:-0.5px;
+}
+.sb-sub{font-size:12px;color:var(--tx2);margin-top:2px;}
+.sb-badge{
+  background:var(--green-s);border:1px solid rgba(82,201,126,0.25);
+  color:var(--green);padding:6px 12px;border-radius:var(--r-pill);
+  font-size:12px;font-weight:700;white-space:nowrap;
+}
+
+.deals-section-label{
+  padding:0 22px;margin-bottom:10px;margin-top:4px;
+  font-size:10.5px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--tx3);font-weight:600;
+}
+
+.deals-list{padding:0 22px;display:flex;flex-direction:column;gap:10px;}
+.deal-card{
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r);padding:13px;
+  display:flex;gap:12px;align-items:center;
+  animation:fadeUp .32s ease both;
+}
+.deal-img{
+  width:56px;height:56px;border-radius:10px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.deal-body{flex:1;min-width:0;}
+.deal-name{font-size:13.5px;font-weight:600;color:var(--tx1);margin-bottom:2px;}
+.deal-sub{font-size:11.5px;color:var(--tx2);margin-bottom:6px;}
+.deal-recipe-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--teal-s);border:1px solid rgba(62,207,181,0.2);
+  color:var(--teal);font-size:10.5px;font-weight:500;
+  padding:2px 8px;border-radius:var(--r-pill);
+}
+.deal-prices{
+  display:flex;align-items:center;gap:8px;
+}
+.deal-orig{font-size:12px;color:var(--tx3);text-decoration:line-through;}
+.deal-sale{
+  font-family:'Syne',sans-serif;font-size:17px;font-weight:800;
+  color:var(--green);letter-spacing:-0.4px;
+}
+.deal-save{
+  background:var(--green-s);color:var(--green);
+  font-size:10px;font-weight:700;
+  padding:2px 7px;border-radius:var(--r-pill);
+  border:1px solid rgba(82,201,126,0.2);
+}
+.deal-action{flex-shrink:0;}
+.btn-add-deal{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--surf2);border:1px solid var(--border);
+  color:var(--tx1);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s,transform .15s;
+}
+.btn-add-deal.added{background:var(--green-s);border-color:rgba(82,201,126,0.3);color:var(--green);}
+.btn-add-deal:active{transform:scale(.88);}
+
+/* ══════════════════════════════════
+   SKIPPI SCREEN
+══════════════════════════════════ */
+
+.ski-hdr{
+  padding:0 22px 14px;display:flex;align-items:center;gap:12px;
+}
+.ski-ava{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 18px rgba(62,207,181,0.28);
+}
+.ski-info h3{
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--tx1);
+}
+.ski-info p{font-size:11px;color:var(--tx2);margin-top:2px;}
+.online-dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:blink 2s infinite;margin-right:4px;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.ski-prompt{
+  margin:0 22px 16px;
+  background:linear-gradient(135deg,var(--teal-s),var(--purple-s));
+  border:1px solid rgba(62,207,181,0.2);
+  border-radius:var(--r);padding:14px 15px;
+}
+.ski-prompt-label{
+  font-size:10px;text-transform:uppercase;letter-spacing:0.9px;
+  color:var(--teal);font-weight:700;margin-bottom:6px;
+}
+.ski-prompt-text{
+  font-size:13px;color:var(--tx1);line-height:1.5;font-weight:500;
+}
+
+.chat-feed{padding:0 22px;display:flex;flex-direction:column;gap:12px;}
+.msg{display:flex;gap:9px;animation:fadeUp .3s ease both;}
+.msg.user{flex-direction:row-reverse;}
+.msg-ava{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;font-size:13px;margin-top:2px;
+}
+.msg-ava.u{background:linear-gradient(135deg,var(--accent),#b04818);}
+.bubble-col{max-width:76%;}
+.bubble{
+  padding:10px 13px;border-radius:16px;
+  font-size:12.5px;line-height:1.55;
+}
+.msg.bot .bubble{background:var(--surf2);color:var(--tx1);border-bottom-left-radius:4px;}
+.msg.user .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:4px;}
+.bubble strong{font-weight:600;}
+.bubble ul{padding-left:14px;margin-top:5px;}
+.bubble ul li{margin-bottom:3px;}
+.msg-ts{font-size:10px;color:var(--tx3);margin-top:4px;padding:0 3px;}
+.msg.user .msg-ts{text-align:right;}
+
+.typing-row{display:flex;gap:9px;animation:fadeUp .25s ease;}
+.typing-bbl{
+  background:var(--surf2);padding:12px 14px;
+  border-radius:16px;border-bottom-left-radius:4px;
+  display:flex;gap:4px;align-items:center;
+}
+.tdot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--tx2);animation:tdots 1.2s infinite ease-in-out;
+}
+.tdot:nth-child(2){animation-delay:.2s;}
+.tdot:nth-child(3){animation-delay:.4s;}
+@keyframes tdots{0%,80%,100%{transform:scale(.65);opacity:.45}40%{transform:scale(1);opacity:1}}
+
+.s-chips{padding:12px 22px 0;display:flex;flex-wrap:wrap;gap:7px;}
+.sch{
+  background:var(--teal-s);border:1px solid rgba(62,207,181,0.22);
+  color:var(--teal);border-radius:var(--r-pill);
+  padding:7px 12px;font-size:12px;font-weight:500;cursor:pointer;
+  transition:transform .15s;
+}
+.sch:active{transform:scale(.95);}
+
+.chat-bar{margin:14px 22px 0;display:flex;gap:8px;align-items:center;}
+.chat-in{
+  flex:1;background:var(--surf2);border:1px solid var(--border);
+  border-radius:var(--r-pill);padding:11px 15px;
+  font-family:'DM Sans',sans-serif;font-size:12.5px;color:var(--tx1);
+  outline:none;transition:border-color .2s;
+}
+.chat-in::placeholder{color:var(--tx3);}
+.chat-in:focus{border-color:rgba(62,207,181,0.38);}
+.send-btn{
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:var(--teal);border:none;color:#111;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 14px rgba(62,207,181,.3);
+  transition:transform .15s;
+}
+.send-btn:active{transform:scale(.9);}
+.send-btn svg{width:16px;height:16px;}
+
+/* Toast */
+.toast{
+  position:fixed;bottom:96px;left:50%;transform:translateX(-50%);
+  background:var(--surf3);color:var(--tx1);border:1px solid var(--border);
+  padding:10px 18px;border-radius:var(--r-pill);
+  font-size:12.5px;font-weight:500;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);z-index:9999;
+  animation:fadeUp .28s ease;pointer-events:none;
+}
+
+/* deal card stagger */
+.deal-card:nth-child(1){animation-delay:.04s}
+.deal-card:nth-child(2){animation-delay:.09s}
+.deal-card:nth-child(3){animation-delay:.14s}
+.deal-card:nth-child(4){animation-delay:.19s}
+.deal-card:nth-child(5){animation-delay:.24s}
+.msg:nth-child(1){animation-delay:.05s}
+.msg:nth-child(2){animation-delay:.12s}
+.msg:nth-child(3){animation-delay:.19s}
+.msg:nth-child(4){animation-delay:.26s}
+</style>
+</head>
+<body>
+<div class="scene"></div>
+
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <span class="sbar-time">09:41</span>
+    <div class="sbar-right">
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      <span class="pro-chip">PRO</span>
+    </div>
+  </div>
+
+  <!-- APP HEADER -->
+  <div class="app-hdr">
+    <div class="logo-col">
+      <div class="logo-mark">Kptn<em>Cook</em></div>
+      <div class="plan-pill">Smart Plan</div>
+    </div>
+    <div class="hdr-date">
+      <div class="hdr-date-main">Week 23</div>
+      <div class="hdr-date-sub">Jun 2 – Jun 8</div>
+    </div>
+  </div>
+
+  <!-- Progress bar (only for setup screen) -->
+  <div class="progress-bar" id="progress-bar" style="display:none;">
+    <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <!-- ═══ SCREENS ═══ -->
+  <div class="screens">
+
+    <!-- ─────────────── SETUP ─────────────── -->
+    <div class="screen active" id="sc-setup">
+      <div class="wizard">
+
+        <!-- Step 0: Intro -->
+        <div class="wstep active" id="step-0">
+          <span class="intro-icon">☀️</span>
+          <div class="intro-h">Good Sunday,<br><em>let's build your week.</em></div>
+          <p class="intro-sub">Answer 4 quick questions and Skippi will generate a personalised 7-day plan — with local deals and expiry-smart scheduling built in.</p>
+          <div class="intro-steps">
+            <div class="istep">
+              <div class="istep-num">1</div>
+              <span class="istep-txt">⚡ How much energy do you have this week?</span>
+            </div>
+            <div class="istep">
+              <div class="istep-num">2</div>
+              <span class="istep-txt">👥 Any guests joining?</span>
+            </div>
+            <div class="istep">
+              <div class="istep-num">3</div>
+              <span class="istep-txt">💶 What's your weekly grocery budget?</span>
+            </div>
+            <div class="istep">
+              <div class="istep-num">4</div>
+              <span class="istep-txt">🥦 Any dietary needs?</span>
+            </div>
+          </div>
+          <div class="step-btn-row" style="padding-top:0;">
+            <button class="btn-next" style="box-shadow:0 4px 20px rgba(62,207,181,0.28);" onclick="nextStep()">
+              Start check-in
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 1: Energy -->
+        <div class="wstep" id="step-1">
+          <div class="step-q">How's your energy<br>this week?</div>
+          <p class="step-hint">We'll pick meals matching your cooking stamina.</p>
+          <div class="energy-grid">
+            <div class="ecard" id="e-low" onclick="selectEnergy('low')">
+              <div class="ecard-ico">🛋️</div>
+              <div class="ecard-body">
+                <div class="ecard-title">Take it easy</div>
+                <div class="ecard-sub">Quick meals, mostly under 20 min</div>
+              </div>
+              <div class="ecard-check"></div>
+            </div>
+            <div class="ecard" id="e-medium" onclick="selectEnergy('medium')">
+              <div class="ecard-ico">⚡</div>
+              <div class="ecard-body">
+                <div class="ecard-title">Balanced week</div>
+                <div class="ecard-sub">Mix of quick and 30-min meals</div>
+              </div>
+              <div class="ecard-check"></div>
+            </div>
+            <div class="ecard" id="e-high" onclick="selectEnergy('high')">
+              <div class="ecard-ico">🔥</div>
+              <div class="ecard-body">
+                <div class="ecard-title">Cooking mode</div>
+                <div class="ecard-sub">Some ambitious dishes included</div>
+              </div>
+              <div class="ecard-check"></div>
+            </div>
+          </div>
+          <div class="step-btn-row">
+            <button class="btn-back" onclick="prevStep()">←</button>
+            <button class="btn-next" id="btn-e-next" disabled onclick="nextStep()">
+              Continue
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Guests -->
+        <div class="wstep" id="step-2">
+          <div class="step-q">Any guests<br>joining you?</div>
+          <p class="step-hint">We'll scale portions and suggest more shareable dishes.</p>
+          <div class="guest-picker">
+            <button class="gpicker-btn" onclick="chGuests(-1)">−</button>
+            <div class="gpicker-num" id="guest-num">0</div>
+            <button class="gpicker-btn" onclick="chGuests(+1)">+</button>
+          </div>
+          <div class="guest-label" id="guest-label">Solo week — just for me</div>
+          <div class="guest-days-hdr">Which days?</div>
+          <div class="guest-days" id="guest-days">
+            <div class="gday" onclick="toggleGDay(this)">Mon</div>
+            <div class="gday" onclick="toggleGDay(this)">Tue</div>
+            <div class="gday" onclick="toggleGDay(this)">Wed</div>
+            <div class="gday" onclick="toggleGDay(this)">Thu</div>
+            <div class="gday" onclick="toggleGDay(this)">Fri</div>
+            <div class="gday" onclick="toggleGDay(this)">Sat</div>
+            <div class="gday" onclick="toggleGDay(this)">Sun</div>
+          </div>
+          <div class="step-btn-row">
+            <button class="btn-back" onclick="prevStep()">←</button>
+            <button class="btn-next" onclick="nextStep()">
+              Continue
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Budget -->
+        <div class="wstep" id="step-3">
+          <div class="step-q">Weekly grocery<br>budget?</div>
+          <p class="step-hint">We'll optimise for deals and minimise waste within your range.</p>
+          <div class="budget-display">
+            <div class="budget-num"><sup>€</sup><span id="budget-num">55</span></div>
+            <div class="budget-per" id="budget-per">~€7.90 per meal · 7 dinners</div>
+          </div>
+          <input type="range" class="slider" id="budget-slider"
+            min="20" max="120" value="55" step="5" oninput="setBudget(+this.value)">
+          <div class="slider-ends">
+            <span>€20 · tight</span>
+            <span>€120 · generous</span>
+          </div>
+          <div class="budget-breakdown">
+            <div class="bdown-card">
+              <div class="bdown-label">Savings vs. avg</div>
+              <div class="bdown-val" id="bd-save" style="color:var(--green)">€12</div>
+            </div>
+            <div class="bdown-card">
+              <div class="bdown-label">Deal items</div>
+              <div class="bdown-val" id="bd-deals" style="color:var(--amber)">6</div>
+            </div>
+            <div class="bdown-card">
+              <div class="bdown-label">New recipes</div>
+              <div class="bdown-val" id="bd-new" style="color:var(--purple)">4</div>
+            </div>
+          </div>
+          <div class="step-btn-row">
+            <button class="btn-back" onclick="prevStep()">←</button>
+            <button class="btn-next" onclick="nextStep()">
+              Continue
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Dietary -->
+        <div class="wstep" id="step-4">
+          <div class="step-q">Any dietary<br>preferences?</div>
+          <p class="step-hint">Pick all that apply — or skip ahead.</p>
+          <div class="diet-grid">
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🥦</span> Vegetarian</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🌱</span> Vegan</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🌾</span> Gluten-free</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🥛</span> Dairy-free</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">💪</span> High protein</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🥑</span> Low carb</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">❤️</span> Heart-healthy</div>
+            <div class="dtag" onclick="toggleDiet(this)"><span class="dtag-ico">🐟</span> Pescatarian</div>
+          </div>
+          <div class="step-btn-row">
+            <button class="btn-back" onclick="prevStep()">←</button>
+            <button class="btn-next" onclick="startGenerate()">
+              Build my plan ✨
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 5: Generating -->
+        <div class="wstep" id="step-5">
+          <div class="gen-wrap">
+            <div class="gen-avatar">🤖</div>
+            <div class="gen-title">Skippi is building<br>your plan…</div>
+            <div class="gen-sub" id="gen-sub">Crunching your preferences</div>
+            <div class="gen-steps" id="gen-steps">
+              <div class="gstep-row" id="gs-0">
+                <span class="gstep-ico">⚡</span>
+                <span class="gstep-txt">Matching recipes to your energy level</span>
+                <div class="gstep-status"></div>
+              </div>
+              <div class="gstep-row" id="gs-1">
+                <span class="gstep-ico">🏪</span>
+                <span class="gstep-txt">Checking REWE deals this week</span>
+                <div class="gstep-status"></div>
+              </div>
+              <div class="gstep-row" id="gs-2">
+                <span class="gstep-ico">⏰</span>
+                <span class="gstep-txt">Scheduling expiry-first ingredients</span>
+                <div class="gstep-status"></div>
+              </div>
+              <div class="gstep-row" id="gs-3">
+                <span class="gstep-ico">🥗</span>
+                <span class="gstep-txt">Balancing nutrition across 7 days</span>
+                <div class="gstep-status"></div>
+              </div>
+              <div class="gstep-row" id="gs-4">
+                <span class="gstep-ico">💶</span>
+                <span class="gstep-txt">Optimising within €<span id="gen-budget">55</span> budget</span>
+                <div class="gstep-status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /wizard -->
+    </div>
+
+    <!-- ─────────────── PLAN ─────────────── -->
+    <div class="screen" id="sc-plan">
+
+      <div class="sec-head" style="padding:0 22px;margin-bottom:14px;">
+        <h2 id="plan-heading">Your Week</h2>
+        <p id="plan-sub">Personalised · Deal-aware · Expiry-smart</p>
+      </div>
+
+      <div class="plan-toggles">
+        <div class="expiry-toggle" id="expiry-toggle" onclick="toggleExpiry()">
+          <span class="et-icon">⏰</span>
+          <div class="et-body">
+            <div class="et-label">Expiry First</div>
+            <div class="et-sub" id="expiry-sub">Off — tap to enable</div>
+          </div>
+          <div class="toggle-pill" id="expiry-pill">
+            <div class="toggle-knob"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="week-stats">
+        <div class="wstat">
+          <div class="wstat-val" style="color:var(--green)">€<span id="ws-save">12.40</span></div>
+          <div class="wstat-lbl">Deal savings</div>
+        </div>
+        <div class="wstat">
+          <div class="wstat-val" style="color:var(--accent)"><span id="ws-expiry">3</span></div>
+          <div class="wstat-lbl">Items used before expiry</div>
+        </div>
+        <div class="wstat">
+          <div class="wstat-val" style="color:var(--purple)"><span id="ws-new">4</span></div>
+          <div class="wstat-lbl">New recipes</div>
+        </div>
+      </div>
+
+      <div class="expiry-banner" id="expiry-banner">
+        <span class="eb-ico">⚠️</span>
+        <span class="eb-txt"><strong>3 items expire soon.</strong> Skippi reordered your week to use spinach, cream & mushrooms first.</span>
+      </div>
+
+      <!-- Day selector -->
+      <div class="day-scroll-wrap">
+        <div class="day-pills" id="day-pills"></div>
+      </div>
+
+      <!-- Day detail -->
+      <div class="day-section" id="day-detail"></div>
+
+    </div>
+
+    <!-- ─────────────── DEALS ─────────────── -->
+    <div class="screen" id="sc-deals">
+
+      <div class="sec-head" style="padding:0 22px;margin-bottom:14px;">
+        <h2>This Week's Deals</h2>
+        <p>Ingredients already in your plan · Jun 2–8</p>
+      </div>
+
+      <div class="store-tabs-wrap">
+        <div class="store-tabs" id="store-tabs">
+          <div class="stab rewe active" onclick="selectStore('rewe',this)">
+            <div class="stab-dot"></div>REWE
+          </div>
+          <div class="stab edeka" onclick="selectStore('edeka',this)">
+            <div class="stab-dot"></div>EDEKA
+          </div>
+          <div class="stab kaufland" onclick="selectStore('kaufland',this)">
+            <div class="stab-dot"></div>KAUFLAND
+          </div>
+          <div class="stab penny" onclick="selectStore('penny',this)">
+            <div class="stab-dot"></div>PENNY
+          </div>
+        </div>
+      </div>
+
+      <div class="savings-banner">
+        <div class="sb-left">
+          <div class="sb-title" id="total-save">€12.40 saved</div>
+          <div class="sb-sub" id="save-sub">across 6 deal items in your plan</div>
+        </div>
+        <div class="sb-badge" id="deal-count-badge">6 deals</div>
+      </div>
+
+      <div class="deals-section-label" id="deal-section-lbl">Used in your plan</div>
+      <div class="deals-list" id="deals-list"></div>
+
+    </div>
+
+    <!-- ─────────────── SKIPPI ─────────────── -->
+    <div class="screen" id="sc-skippi">
+
+      <div class="ski-hdr">
+        <div class="ski-ava">🤖</div>
+        <div class="ski-info">
+          <h3>Skippi</h3>
+          <p><span class="online-dot"></span>AI Plan Generator · Always on</p>
+        </div>
+      </div>
+
+      <div class="ski-prompt">
+        <div class="ski-prompt-label">What Skippi can do</div>
+        <div class="ski-prompt-text">Generate your full 7-day plan via conversation — just tell me your week and I'll handle the rest.</div>
+      </div>
+
+      <div class="chat-feed" id="chat-feed"></div>
+
+      <div class="s-chips">
+        <button class="sch" onclick="doSuggest('Swap Wednesday dinner for something lighter')">🔄 Swap Wed dinner</button>
+        <button class="sch" onclick="doSuggest('Add a fancy Saturday dinner for guests')">🥂 Fancy Sat dinner</button>
+        <button class="sch" onclick="doSuggest('Make the whole week vegetarian')">🌱 Go vegetarian</button>
+      </div>
+
+      <div class="chat-bar">
+        <input class="chat-in" id="chat-in" placeholder="Tell Skippi how to adjust your plan…"
+          onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="send-btn" onclick="sendMsg()">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bnav">
+    <button class="nbtn active" id="nb-setup" onclick="goTab('setup')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+      <span class="nlabel">Setup</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-plan" onclick="goTab('plan')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>
+      </svg>
+      <span class="nlabel">My Plan</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-deals" onclick="goTab('deals')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+        <circle cx="7" cy="7" r="1.5" fill="currentColor" stroke="none"/>
+      </svg>
+      <span class="nlabel">Deals</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-skippi" onclick="goTab('skippi')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      <span class="nlabel">Skippi</span>
+      <div class="ndot"></div>
+    </button>
+  </nav>
+
+</div><!-- /phone -->
+
+<script>
+/* ══════════════ DATA ══════════════ */
+
+const DAYS = [
+  {name:'Mon', num:2, hasDeal:false, expiry:true},
+  {name:'Tue', num:3, hasDeal:true,  expiry:false},
+  {name:'Wed', num:4, hasDeal:false, expiry:false},
+  {name:'Thu', num:5, hasDeal:true,  expiry:false},
+  {name:'Fri', num:6, hasDeal:false, expiry:false},
+  {name:'Sat', num:7, hasDeal:true,  expiry:false},
+  {name:'Sun', num:8, hasDeal:false, expiry:false},
+];
+
+const PLAN_DATA = {
+  low: [
+    {
+      lunch:{e:'🥗', name:'Spinach & Feta Salad', time:'10 min', diff:1,
+        bg:'linear-gradient(140deg,#182e0e 0%,#244a12 60%,#0e1c08 100%)',
+        ings:[{t:'pantry',n:'Baby spinach'},{t:'expiring',n:'Feta ⏰'},{t:'deal',n:'Lemon 🏷️'}],
+        badges:['expiry'], save:null},
+      dinner:{e:'🍝', name:'Aglio e Olio',time:'18 min',diff:1,
+        bg:'linear-gradient(140deg,#2e1a0c 0%,#5a2e10 60%,#1a0e08 100%)',
+        ings:[{t:'pantry',n:'Pasta'},{t:'pantry',n:'Garlic'},{t:'deal',n:'Olive oil 🏷️'}],
+        badges:['deal'], save:'€1.80'},
+    },
+    {
+      lunch:{e:'🥚', name:'Scrambled Eggs & Toast',time:'12 min',diff:1,
+        bg:'linear-gradient(140deg,#2e2a10 0%,#504010 60%,#1c1a08 100%)',
+        ings:[{t:'pantry',n:'Eggs'},{t:'expiring',n:'Cream ⏰'},{t:'pantry',n:'Sourdough'}],
+        badges:['expiry'], save:null},
+      dinner:{e:'🍜', name:'Ramen (Cheat)',time:'20 min',diff:1,
+        bg:'linear-gradient(140deg,#1c1a2e 0%,#322e54 60%,#100e1e 100%)',
+        ings:[{t:'deal',n:'Noodles 🏷️'},{t:'pantry',n:'Soy sauce'},{t:'pantry',n:'Eggs'}],
+        badges:['deal','new'], save:'€2.10'},
+    },
+    {
+      lunch:{e:'🥙', name:'Hummus Wrap',time:'8 min',diff:1,
+        bg:'linear-gradient(140deg,#2e1e0a 0%,#5a3c10 60%,#1c1208 100%)',
+        ings:[{t:'pantry',n:'Chickpeas'},{t:'deal',n:'Flatbread 🏷️'},{t:'pantry',n:'Lemon'}],
+        badges:['deal'], save:'€0.90'},
+      dinner:{e:'🥘', name:'Chickpea Stew',time:'25 min',diff:2,
+        bg:'linear-gradient(140deg,#12162e 0%,#1e2454 60%,#0a0e1c 100%)',
+        ings:[{t:'pantry',n:'Chickpeas'},{t:'pantry',n:'Onion'},{t:'deal',n:'Canned tomato 🏷️'}],
+        badges:['deal'], save:'€1.20'},
+    },
+    {
+      lunch:{e:'🥗', name:'Caesar Salad',time:'15 min',diff:1,
+        bg:'linear-gradient(140deg,#182e0e 0%,#244a12 60%,#0e1c08 100%)',
+        ings:[{t:'pantry',n:'Romaine'},{t:'pantry',n:'Parmesan'},{t:'pantry',n:'Croutons'}],
+        badges:[], save:null},
+      dinner:{e:'🍳', name:'Veggie Omelette',time:'15 min',diff:1,
+        bg:'linear-gradient(140deg,#2a2a10 0%,#484510 60%,#1a1a08 100%)',
+        ings:[{t:'pantry',n:'Eggs'},{t:'expiring',n:'Spinach ⏰'},{t:'pantry',n:'Onion'}],
+        badges:['expiry'], save:null},
+    },
+    {
+      lunch:{e:'🍱', name:'Pasta Salad',time:'20 min',diff:1,
+        bg:'linear-gradient(140deg,#2e1a0c 0%,#5a2e10 60%,#1a0e08 100%)',
+        ings:[{t:'pantry',n:'Pasta'},{t:'pantry',n:'Cherry toms'},{t:'pantry',n:'Olive oil'}],
+        badges:[], save:null},
+      dinner:{e:'🥗', name:'Greek Salad',time:'10 min',diff:1,
+        bg:'linear-gradient(140deg,#12202e 0%,#1a3854 60%,#0a1420 100%)',
+        ings:[{t:'deal',n:'Cucumber 🏷️'},{t:'pantry',n:'Olives'},{t:'pantry',n:'Feta'}],
+        badges:['deal','new'], save:'€1.10'},
+    },
+    {
+      lunch:{e:'🫕', name:'Shakshuka',time:'22 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1a10 0%,#5a3018 60%,#1e1008 100%)',
+        ings:[{t:'pantry',n:'Eggs'},{t:'pantry',n:'Tomatoes'},{t:'deal',n:'Feta 🏷️'}],
+        badges:['deal','new'], save:'€2.50'},
+      dinner:{e:'🍕', name:'Homemade Pizza',time:'40 min',diff:3,
+        bg:'linear-gradient(140deg,#2e1808 0%,#5c3010 60%,#1c1008 100%)',
+        ings:[{t:'deal',n:'Mozzarella 🏷️'},{t:'pantry',n:'Sauce'},{t:'pantry',n:'Dough'}],
+        badges:['deal','new'], save:'€3.10'},
+    },
+    {
+      lunch:{e:'🥞', name:'Fluffy Pancakes',time:'18 min',diff:1,
+        bg:'linear-gradient(140deg,#2e2810 0%,#50440c 60%,#1c1c08 100%)',
+        ings:[{t:'pantry',n:'Flour'},{t:'expiring',n:'Cream ⏰'},{t:'pantry',n:'Eggs'}],
+        badges:['expiry'], save:null},
+      dinner:{e:'🍗', name:'Herb Roast Chicken',time:'55 min',diff:3,
+        bg:'linear-gradient(140deg,#2e1808 0%,#5a3010 60%,#1c1008 100%)',
+        ings:[{t:'deal',n:'Whole chicken 🏷️'},{t:'pantry',n:'Garlic'},{t:'pantry',n:'Rosemary'}],
+        badges:['deal'], save:'€4.20'},
+    },
+  ],
+  medium: [
+    {
+      lunch:{e:'🌮', name:'Breakfast Tacos',time:'18 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1a08 0%,#5a3412 60%,#1c1008 100%)',
+        ings:[{t:'pantry',n:'Eggs'},{t:'deal',n:'Tortillas 🏷️'},{t:'expiring',n:'Avocado ⏰'}],
+        badges:['deal','expiry'], save:'€1.50'},
+      dinner:{e:'🍝', name:'Cacio e Pepe',time:'25 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1a0c 0%,#5a2e10 60%,#1a0e08 100%)',
+        ings:[{t:'pantry',n:'Pasta'},{t:'deal',n:'Pecorino 🏷️'},{t:'pantry',n:'Black pepper'}],
+        badges:['deal','new'], save:'€2.30'},
+    },
+    {
+      lunch:{e:'🥗', name:'Lentil & Feta Salad',time:'20 min',diff:1,
+        bg:'linear-gradient(140deg,#182e0e 0%,#2a4814 60%,#0e1c08 100%)',
+        ings:[{t:'deal',n:'Lentils 🏷️'},{t:'expiring',n:'Feta ⏰'},{t:'pantry',n:'Lemon'}],
+        badges:['deal','expiry'], save:'€1.80'},
+      dinner:{e:'🐟', name:'Lemon Salmon',time:'22 min',diff:2,
+        bg:'linear-gradient(140deg,#0e1e2e 0%,#143254 60%,#081420 100%)',
+        ings:[{t:'deal',n:'Salmon 🏷️'},{t:'pantry',n:'Lemon'},{t:'pantry',n:'Capers'}],
+        badges:['deal','new'], save:'€3.50'},
+    },
+    {
+      lunch:{e:'🥙', name:'Falafel Wrap',time:'30 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1e0a 0%,#5a3c10 60%,#1c1208 100%)',
+        ings:[{t:'pantry',n:'Chickpeas'},{t:'deal',n:'Flatbread 🏷️'},{t:'pantry',n:'Tahini'}],
+        badges:['deal'], save:'€0.90'},
+      dinner:{e:'🍛', name:'Chickpea Curry',time:'35 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1808 0%,#5a3010 60%,#1c1008 100%)',
+        ings:[{t:'pantry',n:'Chickpeas'},{t:'deal',n:'Coconut milk 🏷️'},{t:'expiring',n:'Spinach ⏰'}],
+        badges:['deal','expiry'], save:'€2.10'},
+    },
+    {
+      lunch:{e:'🥚', name:'Eggs Florentine',time:'25 min',diff:2,
+        bg:'linear-gradient(140deg,#2a2a10 0%,#484510 60%,#1a1a08 100%)',
+        ings:[{t:'expiring',n:'Spinach ⏰'},{t:'pantry',n:'Eggs'},{t:'deal',n:'Hollandaise 🏷️'}],
+        badges:['expiry','deal','new'], save:'€1.40'},
+      dinner:{e:'🫕', name:'Ribollita Soup',time:'40 min',diff:2,
+        bg:'linear-gradient(140deg,#1a1418 0%,#302430 60%,#100e14 100%)',
+        ings:[{t:'pantry',n:'Cannellini beans'},{t:'deal',n:'Cavolo nero 🏷️'},{t:'pantry',n:'Sourdough'}],
+        badges:['deal','new'], save:'€1.90'},
+    },
+    {
+      lunch:{e:'🍱', name:'Onigiri Bowl',time:'25 min',diff:2,
+        bg:'linear-gradient(140deg,#12202e 0%,#1a3854 60%,#0a1420 100%)',
+        ings:[{t:'deal',n:'Sushi rice 🏷️'},{t:'pantry',n:'Sesame'},{t:'deal',n:'Nori 🏷️'}],
+        badges:['deal','new'], save:'€2.20'},
+      dinner:{e:'🐄', name:'Beef Stir-fry',time:'22 min',diff:2,
+        bg:'linear-gradient(140deg,#2a1010 0%,#4a1c1c 60%,#1a0a0a 100%)',
+        ings:[{t:'deal',n:'Beef strips 🏷️'},{t:'pantry',n:'Soy sauce'},{t:'expiring',n:'Mushrooms ⏰'}],
+        badges:['deal','expiry'], save:'€3.80'},
+    },
+    {
+      lunch:{e:'🧆', name:'Shakshuka Brunch',time:'28 min',diff:2,
+        bg:'linear-gradient(140deg,#2e1a10 0%,#5a3018 60%,#1e1008 100%)',
+        ings:[{t:'pantry',n:'Eggs'},{t:'pantry',n:'Tomatoes'},{t:'deal',n:'Feta 🏷️'}],
+        badges:['deal'], save:'€2.50'},
+      dinner:{e:'🍕', name:'Sourdough Pizza',time:'45 min',diff:3,
+        bg:'linear-gradient(140deg,#2e1808 0%,#5c3010 60%,#1c1008 100%)',
+        ings:[{t:'pantry',n:'Sourdough'},{t:'deal',n:'Mozzarella 🏷️'},{t:'deal',n:'Prosciutto 🏷️'}],
+        badges:['deal','new'], save:'€4.10'},
+    },
+    {
+      lunch:{e:'🥞', name:'Dutch Baby Pancake',time:'35 min',diff:2,
+        bg:'linear-gradient(140deg,#2e2810 0%,#50440c 60%,#1c1c08 100%)',
+        ings:[{t:'expiring',n:'Cream ⏰'},{t:'pantry',n:'Eggs'},{t:'deal',n:'Berries 🏷️'}],
+        badges:['expiry','deal','new'], save:'€1.60'},
+      dinner:{e:'🦞', name:'Seafood Linguine',time:'30 min',diff:3,
+        bg:'linear-gradient(140deg,#0e1a2e 0%,#143250 60%,#080e1e 100%)',
+        ings:[{t:'deal',n:'Mixed seafood 🏷️'},{t:'pantry',n:'Linguine'},{t:'pantry',n:'Garlic'}],
+        badges:['deal','new'], save:'€4.80'},
+    },
+  ],
+};
+PLAN_DATA.high = PLAN_DATA.medium; // reuse with longer times shown differently
+
+const DEALS = {
+  rewe: [
+    {e:'🐟', name:'Atlantic Salmon Fillet',sub:'400g · Chilled',orig:'€7.99',sale:'€4.49',save:'€3.50',pct:'44%',recipes:'Lemon Salmon',added:false},
+    {e:'🥛', name:'Organic Heavy Cream',sub:'200ml · Bio Weide',orig:'€2.29',sale:'€1.49',save:'€0.80',pct:'35%',recipes:'Dutch Baby, Cacio e Pepe',added:false},
+    {e:'🧀', name:'Pecorino Romano',sub:'100g · PDO',orig:'€3.99',sale:'€2.29',save:'€1.70',pct:'43%',recipes:'Cacio e Pepe',added:false},
+    {e:'🥥', name:'Coconut Milk',sub:'400ml · Organic',orig:'€2.49',sale:'€1.39',save:'€1.10',pct:'44%',recipes:'Chickpea Curry',added:false},
+    {e:'🍋', name:'Organic Lemons',sub:'4-pack',orig:'€1.99',sale:'€1.19',save:'€0.80',pct:'40%',recipes:'Lemon Salmon, Falafel Wrap',added:false},
+  ],
+  edeka: [
+    {e:'🥦', name:'Tenderstem Broccoli',sub:'200g · Fresh',orig:'€2.49',sale:'€1.49',save:'€1.00',pct:'40%',recipes:'Beef Stir-fry',added:false},
+    {e:'🍇', name:'Blueberries',sub:'250g · Premium',orig:'€3.29',sale:'€1.79',save:'€1.50',pct:'46%',recipes:'Dutch Baby Pancake',added:false},
+    {e:'🧆', name:'Feta Cheese PDO',sub:'200g · Greek',orig:'€3.79',sale:'€2.29',save:'€1.50',pct:'40%',recipes:'Lentil Salad, Shakshuka',added:false},
+    {e:'🌊', name:'Mixed Seafood',sub:'350g · Frozen',orig:'€8.99',sale:'€5.49',save:'€3.50',pct:'39%',recipes:'Seafood Linguine',added:false},
+  ],
+  kaufland: [
+    {e:'🐄', name:'Beef Strips',sub:'500g · Rumpsteak',orig:'€9.99',sale:'€6.49',save:'€3.50',pct:'35%',recipes:'Beef Stir-fry',added:false},
+    {e:'🍗', name:'Whole Chicken',sub:'1.4kg · Free Range',orig:'€8.49',sale:'€5.99',save:'€2.50',pct:'29%',recipes:'Herb Roast Chicken',added:false},
+    {e:'🧅', name:'Red Onion Bag',sub:'1kg · Spanish',orig:'€1.99',sale:'€0.99',save:'€1.00',pct:'50%',recipes:'Multiple',added:false},
+    {e:'🫘', name:'Cannellini Beans',sub:'2×400g cans',orig:'€2.49',sale:'€1.39',save:'€1.10',pct:'44%',recipes:'Ribollita Soup',added:false},
+  ],
+  penny: [
+    {e:'🌽', name:'Sweetcorn',sub:'3-pack · Fresh',orig:'€2.29',sale:'€1.49',save:'€0.80',pct:'35%',recipes:'Breakfast Tacos',added:false},
+    {e:'🥜', name:'Tahini',sub:'300g · Organic',orig:'€3.49',sale:'€2.29',save:'€1.20',pct:'34%',recipes:'Falafel Wrap',added:false},
+    {e:'🍞', name:'Sourdough Loaf',sub:'750g · Bakery',orig:'€3.79',sale:'€2.49',save:'€1.30',pct:'34%',recipes:'Ribollita, Eggs Florentine',added:false},
+  ],
+};
+
+const SKIPPI_MSGS = [
+  {from:'bot', text:`Hi! 👋 I've put together your Smart Plan for Week 23 based on your check-in.<br><br>
+  <strong>Your setup:</strong> Medium energy · 0 guests · €55 budget · No restrictions<br><br>
+  I scheduled the <strong>salmon on Tuesday</strong> when REWE has it at 44% off, and moved <strong>spinach + avocado to Monday</strong> before they expire. 🥬`, ts:'09:40'},
+  {from:'user', text:`Why did you put the chickpea curry on Wednesday?`, ts:'09:41'},
+  {from:'bot', text:`Great question! Two reasons:<br>
+<ul>
+  <li>Coconut milk is on deal at REWE this week (€1.39 vs €2.49), so I picked a day mid-week when you'll have time to cook properly</li>
+  <li>The spinach was scheduled Monday (expiry) — by Wednesday your fridge is clear, so curry is the perfect fill</li>
+</ul>
+Want me to swap it to another day?`, ts:'09:41'},
+];
+
+/* ══════════════ STATE ══════════════ */
+let activeTab = 'setup';
+let currentStep = 0;
+let energyLevel = null;
+let guestCount = 0;
+let budget = 55;
+let expiryOn = false;
+let activeDay = 0;
+let activeStore = 'rewe';
+let chatMsgs = [...SKIPPI_MSGS];
+let replyIdx = 0;
+
+const TOTAL_STEPS = 5; // 0-4 are real steps, 5 is generating
+
+/* ══════════════ WIZARD ══════════════ */
+function updateProgress() {
+  const pct = currentStep === 0 ? 0 : (currentStep / 4) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function showStep(idx, dir) {
+  const cur = document.querySelector('.wstep.active');
+  if (cur) {
+    cur.style.animation = 'wOut .22s ease forwards';
+    setTimeout(() => {
+      cur.classList.remove('active');
+      cur.style.animation = '';
+    }, 220);
+  }
+  setTimeout(() => {
+    const next = document.getElementById('step-' + idx);
+    if (next) {
+      next.classList.add('active');
+      next.style.animation = 'wIn .28s ease forwards';
+    }
+  }, 120);
+}
+
+function nextStep() {
+  if (currentStep < 4) {
+    showStep(currentStep + 1);
+    currentStep++;
+    updateProgress();
+  }
+}
+function prevStep() {
+  if (currentStep > 0) {
+    showStep(currentStep - 1);
+    currentStep--;
+    updateProgress();
+  }
+}
+
+function selectEnergy(level) {
+  energyLevel = level;
+  ['low','medium','high'].forEach(l => {
+    document.getElementById('e-' + l).classList.toggle('sel', l === level);
+  });
+  document.getElementById('btn-e-next').disabled = false;
+}
+
+function chGuests(d) {
+  guestCount = Math.max(0, Math.min(8, guestCount + d));
+  const el = document.getElementById('guest-num');
+  el.textContent = guestCount;
+  el.style.transform = 'scale(1.2)';
+  el.style.color = guestCount > 0 ? 'var(--teal)' : 'var(--tx1)';
+  setTimeout(() => { el.style.transform = ''; el.style.color = ''; }, 220);
+  const labels = ['Solo week — just for me','Just 1 guest joining',
+    '2 guests total','Group of 3','Dinner for 4','Dinner for 5',
+    'Party of 6!','Big gathering!','Feast mode!'];
+  document.getElementById('guest-label').textContent = labels[guestCount] || 'Party mode!';
+  document.getElementById('guest-days').style.display = guestCount > 0 ? 'flex' : 'none';
+}
+
+function toggleGDay(el) { el.classList.toggle('sel'); }
+function toggleDiet(el) { el.classList.toggle('sel'); }
+
+function setBudget(v) {
+  budget = v;
+  document.getElementById('budget-num').textContent = v;
+  const perMeal = (v / 7).toFixed(2);
+  document.getElementById('budget-per').textContent = `~€${perMeal} per meal · 7 dinners`;
+  const save = Math.round(v * 0.22);
+  const deals = Math.round(3 + v / 20);
+  const newR = Math.round(2 + v / 25);
+  document.getElementById('bd-save').textContent = '€' + save;
+  document.getElementById('bd-deals').textContent = deals;
+  document.getElementById('bd-new').textContent = newR;
+}
+
+function startGenerate() {
+  document.getElementById('progress-bar').style.display = 'none';
+  showStep(5);
+  document.getElementById('gen-budget').textContent = budget;
+  const steps = ['gs-0','gs-1','gs-2','gs-3','gs-4'];
+  const delays = [400, 1000, 1700, 2400, 3100];
+  const finAt =  [900, 1600, 2300, 3000, 3700];
+
+  steps.forEach((id, i) => {
+    setTimeout(() => {
+      document.getElementById(id).classList.add('spinning');
+    }, delays[i]);
+    setTimeout(() => {
+      const el = document.getElementById(id);
+      el.classList.remove('spinning');
+      el.classList.add('done');
+    }, finAt[i]);
+  });
+
+  setTimeout(() => {
+    document.getElementById('gen-title').textContent = 'Your plan is ready! ✨';
+    document.getElementById('gen-sub').textContent = 'Skippi built 14 meals · €12.40 in savings';
+    setTimeout(() => {
+      if (!energyLevel) energyLevel = 'medium';
+      renderPlan();
+      renderDayPills();
+      goTab('plan');
+    }, 900);
+  }, 4200);
+}
+
+/* ══════════════ PLAN ══════════════ */
+function renderDayPills() {
+  document.getElementById('day-pills').innerHTML = DAYS.map((d, i) => `
+    <div class="dpill ${i === activeDay ? 'active' : ''} ${d.hasDeal ? 'has-deal' : ''} ${d.expiry ? 'expiry' : ''}"
+      onclick="selectDay(${i})">
+      <span class="dpill-name">${d.name}</span>
+      <span class="dpill-num">${d.num}</span>
+      <div class="dpill-dot"></div>
+    </div>
+  `).join('');
+}
+
+function selectDay(i) {
+  activeDay = i;
+  renderDayPills();
+  renderDayMeals();
+}
+
+function renderDayMeals() {
+  const plan = PLAN_DATA[energyLevel || 'medium'][activeDay];
+  if (!plan) return;
+
+  const makeChips = (ings) => ings.map(ing => `
+    <span class="ing-chip ${ing.t}">${ing.n}</span>`).join('');
+  const makeBadges = (badges) => badges.map(b => {
+    if (b === 'deal') return `<div class="mbadge deal">🏷️ Deal</div>`;
+    if (b === 'expiry') return `<div class="mbadge expiry">⏰ Expiry</div>`;
+    if (b === 'new') return `<div class="mbadge new">✦ New</div>`;
+  }).join('');
+
+  const mealHtml = (meal, type) => `
+    <div class="meal-section-label">${type}</div>
+    <div class="meal-card">
+      <div class="meal-img">
+        <div class="meal-img-bg" style="background:${meal.bg}"></div>
+        <div class="meal-img-grad"></div>
+        <div class="meal-emoji">${meal.e}</div>
+        <div class="meal-badges">${makeBadges(meal.badges)}</div>
+      </div>
+      <div class="meal-body">
+        <div class="meal-name">${meal.name}</div>
+        <div class="meal-meta">
+          <span class="mmeta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+            </svg>${meal.time}
+          </span>
+          <span class="mmeta" style="font-size:10.5px;letter-spacing:1.5px;color:var(--teal)">
+            ${'●'.repeat(meal.diff)}${'○'.repeat(4-meal.diff)}
+          </span>
+        </div>
+        <div class="ing-preview">${makeChips(meal.ings)}</div>
+      </div>
+      <div class="meal-foot">
+        <span class="meal-savings">${meal.save ? `<strong>${meal.save}</strong> saved with deals` : '<span style="color:var(--tx2)">Pantry items</span>'}</span>
+        <button class="btn-swap" onclick="toast('Swap suggestions coming soon!')">Swap ↻</button>
+      </div>
+    </div>`;
+
+  document.getElementById('day-detail').innerHTML =
+    mealHtml(plan.lunch, 'Lunch') + mealHtml(plan.dinner, 'Dinner');
+}
+
+function renderPlan() {
+  renderDayMeals();
+}
+
+function toggleExpiry() {
+  expiryOn = !expiryOn;
+  const tog = document.getElementById('expiry-toggle');
+  const pill = document.getElementById('expiry-pill');
+  const banner = document.getElementById('expiry-banner');
+  tog.classList.toggle('on', expiryOn);
+  pill.classList.toggle('on', expiryOn);
+  banner.classList.toggle('show', expiryOn);
+  document.getElementById('expiry-sub').textContent =
+    expiryOn ? '3 items prioritised · spinach, cream, avocado' : 'Off — tap to enable';
+}
+
+/* ══════════════ DEALS ══════════════ */
+function selectStore(store, el) {
+  activeStore = store;
+  document.querySelectorAll('.stab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderDeals();
+}
+
+function renderDeals() {
+  const items = DEALS[activeStore] || [];
+  const totalSave = items.reduce((s, d) => s + parseFloat(d.save.replace('€','')), 0);
+  document.getElementById('total-save').textContent = `€${totalSave.toFixed(2)} saved`;
+  document.getElementById('save-sub').textContent = `across ${items.length} deal items in your plan`;
+  document.getElementById('deal-count-badge').textContent = `${items.length} deals`;
+
+  document.getElementById('deals-list').innerHTML = items.map((d, i) => `
+    <div class="deal-card" style="animation-delay:${i*.06}s">
+      <div class="deal-img" style="background:var(--surf2)">${d.e}</div>
+      <div class="deal-body">
+        <div class="deal-name">${d.name}</div>
+        <div class="deal-sub">${d.sub}</div>
+        <div class="deal-recipe-badge">📋 Used in: ${d.recipes}</div>
+        <div class="deal-prices" style="margin-top:6px">
+          <span class="deal-orig">${d.orig}</span>
+          <span class="deal-sale">${d.sale}</span>
+          <span class="deal-save">-${d.pct}</span>
+        </div>
+      </div>
+      <div class="deal-action">
+        <button class="btn-add-deal ${d.added ? 'added' : ''}"
+          id="deal-btn-${i}"
+          onclick="toggleDeal(${i}, this)">
+          ${d.added ? '✓' : '+'}
+        </button>
+      </div>
+    </div>`).join('');
+}
+
+function toggleDeal(i, btn) {
+  const deals = DEALS[activeStore];
+  deals[i].added = !deals[i].added;
+  btn.classList.toggle('added', deals[i].added);
+  btn.textContent = deals[i].added ? '✓' : '+';
+  const msg = deals[i].added
+    ? `${deals[i].name} added to shopping list!`
+    : `${deals[i].name} removed from list`;
+  toast(msg);
+}
+
+/* ══════════════ SKIPPI CHAT ══════════════ */
+function renderChat() {
+  document.getElementById('chat-feed').innerHTML = chatMsgs.map((m, i) => `
+    <div class="msg ${m.from === 'bot' ? 'bot' : 'user'}" style="animation-delay:${i*.1}s">
+      ${m.from === 'bot'
+        ? `<div class="msg-ava">🤖</div>`
+        : `<div class="msg-ava u">👤</div>`}
+      <div class="bubble-col">
+        <div class="bubble">${m.text}</div>
+        <div class="msg-ts">${m.ts}</div>
+      </div>
+    </div>`).join('');
+  const sc = document.getElementById('sc-skippi');
+  setTimeout(() => { sc.scrollTop = sc.scrollHeight; }, 60);
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chat-in');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  pushUser(txt);
+}
+
+function doSuggest(txt) { pushUser(txt); }
+
+function pushUser(txt) {
+  const now = new Date();
+  const ts = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  chatMsgs.push({from:'user', text:txt, ts});
+  renderChat();
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    chatMsgs.push({from:'bot', text:pickReply(txt), ts});
+    renderChat();
+  }, 1800);
+}
+
+const REPLIES = [
+  `Sure! I've swapped Wednesday dinner to a <strong>Creamy Mushroom Risotto</strong> — same deal ingredients, slightly lighter. Updated your plan. 🍄`,
+  `Saturday is now a special occasion dinner: <strong>Pan-Seared Duck Breast</strong> with cherry sauce. I found duck at REWE for €7.49 (normally €12). This will impress your guests! 🦆`,
+  `Going fully vegetarian for Week 23! I've replaced:<br><ul><li>Salmon → Lemon Herb Tofu</li><li>Beef stir-fry → King Oyster Mushroom Stir-fry</li><li>Chicken → Cauliflower Roast</li></ul>Savings actually increase by €3.20 🌿`,
+  `Your expiry items are now front-loaded: spinach Monday, avocado Tuesday, cream Wednesday. Nothing wasted. ✓`,
+  `I recalculated within your budget. You'll still save <strong>€11.80</strong> with 5 deal items. The salmon and coconut milk deals are the biggest wins this week.`,
+  `Great idea! I've added a prep-ahead note for Sunday: batch cook the chickpeas and pasta sauce. Saves ~40 minutes across the week. 📝`,
+];
+let ri = 0;
+
+function pickReply(t) {
+  const l = t.toLowerCase();
+  if (l.includes('swap') || l.includes('wed')) return REPLIES[0];
+  if (l.includes('sat') || l.includes('guest') || l.includes('fancy')) return REPLIES[1];
+  if (l.includes('veg')) return REPLIES[2];
+  if (l.includes('expir')) return REPLIES[3];
+  if (l.includes('budget') || l.includes('cheaper')) return REPLIES[4];
+  if (l.includes('prep') || l.includes('batch')) return REPLIES[5];
+  return REPLIES[ri++ % REPLIES.length];
+}
+
+function showTyping() {
+  const feed = document.getElementById('chat-feed');
+  const d = document.createElement('div');
+  d.id = 'typing'; d.className = 'typing-row';
+  d.innerHTML = `<div class="msg-ava">🤖</div>
+    <div class="typing-bbl">
+      <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+    </div>`;
+  feed.appendChild(d);
+  document.getElementById('sc-skippi').scrollTop = 9999;
+}
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+/* ══════════════ TABS ══════════════ */
+function goTab(tab) {
+  if (tab === activeTab) return;
+
+  const prev = document.getElementById('sc-' + activeTab);
+  const next = document.getElementById('sc-' + tab);
+  const pnav = document.getElementById('nb-' + activeTab);
+  const nnav = document.getElementById('nb-' + tab);
+
+  prev.classList.add('out-left');
+  setTimeout(() => prev.classList.remove('active','out-left'), 280);
+  setTimeout(() => next.classList.add('active'), 140);
+
+  pnav.classList.remove('active');
+  nnav.classList.add('active');
+  activeTab = tab;
+
+  if (tab === 'setup') {
+    document.getElementById('progress-bar').style.display =
+      (currentStep > 0 && currentStep <= 4) ? 'block' : 'none';
+  } else {
+    document.getElementById('progress-bar').style.display = 'none';
+  }
+}
+
+/* ══════════════ TOAST ══════════════ */
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ══════════════ INIT ══════════════ */
+renderDayPills();
+renderDayMeals();
+renderDeals();
+renderChat();
+// Show guest days only if guests > 0 initially
+document.getElementById('guest-days').style.display = 'none';
+</script>
+</body>
+</html>

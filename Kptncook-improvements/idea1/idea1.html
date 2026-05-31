@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KptnCook · Use What I Have</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --bg:       #161616;
+  --surf:     #1e1e1e;
+  --surf2:    #272727;
+  --surf3:    #333333;
+  --border:   rgba(255,255,255,0.07);
+  --accent:   #e8622a;
+  --accent-s: rgba(232,98,42,0.14);
+  --teal:     #3ecfb5;
+  --teal-s:   rgba(62,207,181,0.14);
+  --tx1:      #f2f2f2;
+  --tx2:      #8e8e8e;
+  --tx3:      #4a4a4a;
+  --green:    #52c97e;
+  --green-s:  rgba(82,201,126,0.14);
+  --yellow:   #f5c518;
+  --yellow-s: rgba(245,197,24,0.14);
+  --r-sm:     8px;
+  --r:        14px;
+  --r-lg:     22px;
+  --r-pill:   999px;
+}
+
+html,body {
+  height:100%;
+  background:#0c0c0c;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'DM Sans',sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ─── Desktop atmosphere ─── */
+.scene {
+  position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 55% 45% at 15% 55%, rgba(232,98,42,0.07) 0%,transparent 70%),
+    radial-gradient(ellipse 45% 55% at 85% 25%, rgba(62,207,181,0.06) 0%,transparent 65%),
+    #0c0c0c;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ─── Phone shell ─── */
+.phone {
+  position:relative;z-index:1;
+  width:390px;height:844px;
+  background:var(--bg);
+  border-radius:52px;
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.09),
+    0 0 0 12px #0a0a0a,
+    0 0 0 13px rgba(255,255,255,0.06),
+    0 40px 100px rgba(0,0,0,0.85),
+    0 0 140px rgba(232,98,42,0.05);
+}
+
+/* ─── Status bar ─── */
+.sbar {
+  height:48px;padding:14px 26px 0;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.sbar-time {
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;
+}
+.sbar-icons {display:flex;gap:5px;align-items:center;}
+.sbar-icons svg {width:15px;height:15px;fill:var(--tx1);}
+
+/* ─── App header ─── */
+.app-hdr {
+  padding:10px 22px 8px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.logo-col {display:flex;flex-direction:column;gap:4px;}
+.logo-wordmark {
+  font-family:'Syne',sans-serif;font-size:21px;font-weight:800;
+  color:var(--tx1);letter-spacing:-0.5px;line-height:1;
+}
+.logo-wordmark em {color:var(--accent);font-style:normal;}
+.mode-pill {
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--accent-s);
+  border:1px solid rgba(232,98,42,0.28);
+  color:var(--accent);
+  font-size:9.5px;font-weight:600;
+  text-transform:uppercase;letter-spacing:0.9px;
+  padding:3px 8px;border-radius:var(--r-pill);
+  width:fit-content;
+}
+.mode-pill::before {
+  content:'';width:5px;height:5px;
+  border-radius:50%;background:var(--accent);
+  animation:blink 2s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.hdr-ava {
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#b04818);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+}
+
+/* ─── Screens container ─── */
+.screens {
+  flex:1;overflow:hidden;position:relative;
+}
+.screen {
+  position:absolute;inset:0;
+  overflow-y:auto;overflow-x:hidden;
+  padding-bottom:16px;
+  opacity:0;transform:translateX(28px);
+  transition:opacity .28s ease,transform .28s ease;
+  pointer-events:none;
+  scrollbar-width:none;
+}
+.screen::-webkit-scrollbar{display:none;}
+.screen.active {opacity:1;transform:translateX(0);pointer-events:all;}
+.screen.out-left {opacity:0;transform:translateX(-28px);}
+
+/* ─── Section heading ─── */
+.sec-head {padding:0 22px;margin-bottom:18px;}
+.sec-head h2 {
+  font-family:'Syne',sans-serif;font-size:25px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.5px;
+}
+.sec-head p {font-size:12.5px;color:var(--tx2);margin-top:3px;}
+
+/* ─── Bottom nav ─── */
+.bnav {
+  height:78px;flex-shrink:0;
+  background:var(--surf);
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;padding-top:8px;
+}
+.nbtn {
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;
+  color:var(--tx3);padding:5px 0;
+  transition:color .18s;
+}
+.nbtn.active{color:var(--accent);}
+.nbtn svg{width:21px;height:21px;transition:transform .18s;}
+.nbtn.active svg{transform:scale(1.08);}
+.nlabel{font-size:9.5px;font-weight:500;letter-spacing:0.2px;}
+.ndot {
+  width:4px;height:4px;border-radius:50%;
+  background:var(--accent);opacity:0;
+  transition:opacity .18s;
+}
+.nbtn.active .ndot{opacity:1;}
+
+/* ══════════════════════════════════
+   PANTRY SCREEN
+══════════════════════════════════ */
+
+.scan-row {
+  padding:0 22px;margin-bottom:20px;
+  display:flex;gap:10px;
+}
+.btn-scan {
+  flex:1;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r);
+  padding:13px 16px;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;
+  box-shadow:0 4px 22px rgba(232,98,42,0.32);
+  transition:transform .15s,opacity .15s;
+}
+.btn-scan:active{transform:scale(.97);opacity:.9;}
+.btn-scan svg{width:17px;height:17px;}
+.btn-add {
+  background:var(--surf2);color:var(--tx1);
+  border:1px solid var(--border);border-radius:var(--r);
+  padding:13px 14px;
+  font-family:'DM Sans',sans-serif;font-size:13.5px;font-weight:500;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  white-space:nowrap;transition:background .15s;
+}
+.btn-add:active{background:var(--surf3);}
+.btn-add svg{width:14px;height:14px;}
+
+.count-bar {
+  padding:0 22px;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.count-label {
+  font-size:11px;color:var(--tx2);
+  text-transform:uppercase;letter-spacing:0.9px;font-weight:600;
+}
+.count-badge {
+  background:var(--surf2);color:var(--tx1);
+  font-size:11.5px;font-weight:600;
+  padding:3px 10px;border-radius:var(--r-pill);
+}
+
+.cat-label {
+  padding:0 22px;margin:14px 0 8px;
+  font-size:10.5px;text-transform:uppercase;
+  letter-spacing:1px;color:var(--tx3);font-weight:600;
+}
+
+.pantry-list {
+  padding:0 22px;
+  display:flex;flex-direction:column;gap:7px;
+}
+
+.pitem {
+  background:var(--surf);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:11px 13px;
+  display:flex;align-items:center;gap:11px;
+  animation:fadeUp .35s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+
+.pitem-icon {
+  width:38px;height:38px;border-radius:10px;
+  background:var(--surf2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;flex-shrink:0;
+}
+.pitem-info{flex:1;min-width:0;}
+.pitem-name{font-size:13.5px;font-weight:500;color:var(--tx1);}
+.pitem-unit{font-size:11.5px;color:var(--tx2);margin-top:1px;}
+
+.qty {
+  display:flex;align-items:center;
+  background:var(--surf2);border-radius:var(--r-sm);overflow:hidden;
+}
+.qbtn {
+  width:27px;height:27px;background:none;border:none;
+  color:var(--tx1);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;
+}
+.qbtn:active{background:var(--surf3);}
+.qval {
+  min-width:24px;text-align:center;
+  font-size:13.5px;font-weight:600;color:var(--tx1);
+  transition:transform .2s,color .2s;
+}
+
+.cta-find {
+  margin:20px 22px 4px;
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r);
+  padding:15px;width:calc(100% - 44px);
+  font-family:'DM Sans',sans-serif;font-size:14.5px;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;
+  justify-content:center;gap:8px;
+  box-shadow:0 4px 24px rgba(232,98,42,0.32);
+  transition:transform .15s,opacity .15s;
+}
+.cta-find:active{transform:scale(.98);opacity:.9;}
+.cta-find svg{width:17px;height:17px;}
+
+/* ══════════════════════════════════
+   RECIPES SCREEN
+══════════════════════════════════ */
+
+.filter-wrap{padding:0 22px;margin-bottom:18px;}
+.filter-card {
+  background:var(--surf);
+  border:1px solid var(--border);
+  border-radius:var(--r);padding:15px;
+}
+.filter-eyebrow {
+  font-size:10.5px;color:var(--tx2);
+  text-transform:uppercase;letter-spacing:0.9px;font-weight:600;
+  margin-bottom:11px;
+}
+.filter-top {
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:10px;
+}
+.filter-question{font-size:13.5px;color:var(--tx1);font-weight:500;}
+.filter-val {
+  font-family:'Syne',sans-serif;font-size:19px;font-weight:700;
+  color:var(--teal);letter-spacing:-0.5px;
+}
+
+input[type=range].slider {
+  width:100%;-webkit-appearance:none;appearance:none;
+  height:4px;background:var(--surf3);border-radius:2px;
+  outline:none;cursor:pointer;
+}
+input[type=range].slider::-webkit-slider-thumb {
+  -webkit-appearance:none;width:20px;height:20px;
+  border-radius:50%;background:var(--teal);
+  box-shadow:0 2px 12px rgba(62,207,181,0.38);
+  cursor:pointer;transition:transform .15s;
+}
+input[type=range].slider::-webkit-slider-thumb:active{transform:scale(1.25);}
+.slider-ends {
+  display:flex;justify-content:space-between;
+  margin-top:6px;
+}
+.slider-ends span{font-size:10px;color:var(--tx3);}
+
+.results-bar {
+  padding:0 22px;margin-bottom:14px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.res-count{font-size:12.5px;color:var(--tx2);}
+.res-count strong{color:var(--tx1);}
+.sort-chip {
+  display:flex;align-items:center;gap:4px;
+  background:var(--surf2);border:1px solid var(--border);
+  border-radius:var(--r-pill);padding:5px 10px;
+  font-size:10.5px;color:var(--tx2);font-weight:500;
+}
+.sort-chip svg{width:11px;height:11px;}
+
+/* Recipe cards */
+.rlist{padding:0 22px;display:flex;flex-direction:column;gap:14px;}
+
+.rcard {
+  background:var(--surf);border:1px solid var(--border);
+  border-radius:var(--r-lg);overflow:hidden;
+  animation:fadeUp .35s ease both;cursor:pointer;
+  transition:transform .2s;
+}
+.rcard:active{transform:scale(.985);}
+
+.rcard-img {
+  height:155px;position:relative;
+  display:flex;align-items:flex-start;justify-content:flex-end;
+  padding:12px;
+}
+.rcard-bg{position:absolute;inset:0;}
+.rcard-grad {
+  position:absolute;bottom:0;left:0;right:0;height:90px;
+  background:linear-gradient(to top,rgba(20,20,20,.97),transparent);
+  z-index:1;
+}
+.rcard-emoji {
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  font-size:62px;opacity:0.65;
+  filter:drop-shadow(0 4px 16px rgba(0,0,0,0.55));
+}
+.match-tag {
+  position:relative;z-index:2;
+  padding:5px 10px;border-radius:var(--r-pill);
+  font-family:'Syne',sans-serif;font-size:12.5px;font-weight:700;
+  display:flex;align-items:center;gap:4px;
+}
+.match-tag.hi{background:rgba(82,201,126,.22);border:1px solid rgba(82,201,126,.38);color:var(--green);}
+.match-tag.md{background:rgba(245,197,24,.18);border:1px solid rgba(245,197,24,.32);color:var(--yellow);}
+.match-tag.lo{background:rgba(232,98,42,.18);border:1px solid rgba(232,98,42,.32);color:var(--accent);}
+.match-tag::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;}
+
+.rcard-body{padding:13px;}
+.rcard-name {
+  font-family:'Syne',sans-serif;font-size:15.5px;font-weight:700;
+  color:var(--tx1);letter-spacing:-0.3px;margin-bottom:6px;
+}
+.rcard-meta {
+  display:flex;gap:12px;margin-bottom:11px;
+  align-items:center;
+}
+.rmeta {
+  display:flex;align-items:center;gap:4px;
+  font-size:11.5px;color:var(--tx2);
+}
+.rmeta svg{width:11px;height:11px;}
+.rdiff{font-size:10.5px;letter-spacing:1.5px;color:var(--teal);}
+
+.chips-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:6px;}
+.chip {
+  display:flex;align-items:center;gap:3px;
+  padding:3px 8px;border-radius:var(--r-pill);
+  font-size:10.5px;font-weight:500;
+}
+.chip.have {background:var(--green-s);color:var(--green);border:1px solid rgba(82,201,126,.18);}
+.chip.need {background:var(--accent-s);color:var(--accent);border:1px solid rgba(232,98,42,.18);}
+.chip svg{width:9px;height:9px;}
+.need-hdr {
+  font-size:10px;color:var(--tx3);
+  text-transform:uppercase;letter-spacing:0.6px;font-weight:600;
+  margin-bottom:5px;margin-top:4px;
+}
+.all-good{font-size:12px;color:var(--green);margin-top:4px;}
+
+.rcard-foot {
+  padding:11px 13px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.have-tally{font-size:11.5px;color:var(--tx2);}
+.have-tally strong{color:var(--green);}
+.btn-plan {
+  background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r-sm);
+  padding:6px 13px;font-family:'DM Sans',sans-serif;
+  font-size:11.5px;font-weight:600;cursor:pointer;
+  transition:opacity .15s;
+}
+.btn-plan:active{opacity:.8;}
+
+/* ══════════════════════════════════
+   SKIPPI SCREEN
+══════════════════════════════════ */
+
+.skippi-hdr {
+  padding:0 22px 14px;
+  display:flex;align-items:center;gap:12px;
+}
+.ski-ava {
+  width:42px;height:42px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;font-size:20px;
+  box-shadow:0 4px 18px rgba(62,207,181,0.28);flex-shrink:0;
+}
+.ski-meta h3 {
+  font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--tx1);
+}
+.ski-sub {
+  display:flex;align-items:center;gap:4px;margin-top:2px;
+}
+.online-dot {
+  width:6px;height:6px;border-radius:50%;
+  background:var(--green);animation:blink 2s infinite;
+}
+.ski-sub span{font-size:11px;color:var(--tx2);}
+
+.insight-banner {
+  margin:0 22px 14px;
+  background:var(--teal-s);
+  border:1px solid rgba(62,207,181,0.2);
+  border-radius:var(--r);padding:11px 13px;
+  display:flex;align-items:center;gap:10px;
+}
+.insight-ico{font-size:18px;}
+.insight-txt{font-size:12px;color:var(--teal);line-height:1.45;}
+.insight-txt strong{font-weight:600;}
+
+.chat-feed {
+  padding:0 22px;
+  display:flex;flex-direction:column;gap:13px;
+}
+
+.msg{display:flex;gap:9px;animation:fadeUp .3s ease both;}
+.msg.user{flex-direction:row-reverse;}
+.msg-ava {
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),#1a9f8a);
+  display:flex;align-items:center;justify-content:center;font-size:13px;
+  margin-top:2px;
+}
+.msg-ava.u{background:linear-gradient(135deg,var(--accent),#b04818);}
+.bubble-col{max-width:76%;}
+.bubble {
+  padding:10px 13px;border-radius:16px;
+  font-size:12.5px;line-height:1.55;
+}
+.msg.bot .bubble {
+  background:var(--surf2);color:var(--tx1);
+  border-bottom-left-radius:4px;
+}
+.msg.user .bubble {
+  background:var(--accent);color:#fff;
+  border-bottom-right-radius:4px;
+}
+.bubble strong{font-weight:600;}
+.bubble ul{padding-left:14px;margin-top:6px;}
+.bubble ul li{margin-bottom:3px;}
+.msg-ts{font-size:10px;color:var(--tx3);margin-top:4px;padding:0 3px;}
+.msg.user .msg-ts{text-align:right;}
+
+.typing-row{display:flex;gap:9px;animation:fadeUp .25s ease;}
+.typing-bbl {
+  background:var(--surf2);padding:12px 14px;
+  border-radius:16px;border-bottom-left-radius:4px;
+  display:flex;gap:4px;align-items:center;
+}
+.tdot {
+  width:6px;height:6px;border-radius:50%;
+  background:var(--tx2);animation:tdots 1.2s infinite ease-in-out;
+}
+.tdot:nth-child(2){animation-delay:.2s;}
+.tdot:nth-child(3){animation-delay:.4s;}
+@keyframes tdots{0%,80%,100%{transform:scale(.65);opacity:.45}40%{transform:scale(1);opacity:1}}
+
+.suggest-chips {
+  padding:12px 22px 0;
+  display:flex;flex-wrap:wrap;gap:7px;
+}
+.sch {
+  background:var(--teal-s);
+  border:1px solid rgba(62,207,181,0.22);
+  color:var(--teal);border-radius:var(--r-pill);
+  padding:7px 12px;font-size:12px;font-weight:500;
+  cursor:pointer;transition:transform .15s,background .15s;
+}
+.sch:active{transform:scale(.95);}
+
+.chat-bar {
+  margin:14px 22px 0;display:flex;gap:8px;align-items:center;
+}
+.chat-in {
+  flex:1;background:var(--surf2);
+  border:1px solid var(--border);border-radius:var(--r-pill);
+  padding:11px 15px;font-family:'DM Sans',sans-serif;font-size:12.5px;
+  color:var(--tx1);outline:none;transition:border-color .2s;
+}
+.chat-in::placeholder{color:var(--tx3);}
+.chat-in:focus{border-color:rgba(62,207,181,0.38);}
+.send-btn {
+  width:40px;height:40px;border-radius:50%;flex-shrink:0;
+  background:var(--teal);border:none;color:#111;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;box-shadow:0 4px 14px rgba(62,207,181,.32);
+  transition:transform .15s;
+}
+.send-btn:active{transform:scale(.9);}
+.send-btn svg{width:16px;height:16px;}
+
+/* ─── Toast ─── */
+.toast {
+  position:fixed;bottom:98px;left:50%;
+  transform:translateX(-50%);
+  background:var(--surf3);color:var(--tx1);
+  border:1px solid var(--border);
+  padding:10px 18px;border-radius:var(--r-pill);
+  font-size:12.5px;font-weight:500;white-space:nowrap;
+  box-shadow:0 6px 24px rgba(0,0,0,.5);z-index:9999;
+  animation:fadeUp .28s ease;pointer-events:none;
+}
+
+/* ─── Stagger ─── */
+.pitem:nth-child(1){animation-delay:.04s}
+.pitem:nth-child(2){animation-delay:.08s}
+.pitem:nth-child(3){animation-delay:.12s}
+.pitem:nth-child(4){animation-delay:.16s}
+.pitem:nth-child(5){animation-delay:.20s}
+.pitem:nth-child(6){animation-delay:.24s}
+.pitem:nth-child(7){animation-delay:.28s}
+.pitem:nth-child(8){animation-delay:.32s}
+.pitem:nth-child(9){animation-delay:.36s}
+.pitem:nth-child(10){animation-delay:.40s}
+.pitem:nth-child(11){animation-delay:.44s}
+.pitem:nth-child(12){animation-delay:.48s}
+.rcard:nth-child(1){animation-delay:.04s}
+.rcard:nth-child(2){animation-delay:.10s}
+.rcard:nth-child(3){animation-delay:.16s}
+.rcard:nth-child(4){animation-delay:.22s}
+.rcard:nth-child(5){animation-delay:.28s}
+.msg:nth-child(1){animation-delay:.06s}
+.msg:nth-child(2){animation-delay:.14s}
+.msg:nth-child(3){animation-delay:.22s}
+</style>
+</head>
+<body>
+<div class="scene"></div>
+
+<div class="phone">
+
+  <!-- STATUS BAR -->
+  <div class="sbar">
+    <span class="sbar-time">18:40</span>
+    <div class="sbar-icons">
+      <!-- wifi -->
+      <svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+      <!-- battery -->
+      <svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+    </div>
+  </div>
+
+  <!-- APP HEADER -->
+  <div class="app-hdr">
+    <div class="logo-col">
+      <div class="logo-wordmark">Kptn<em>Cook</em></div>
+      <div class="mode-pill">Use What I Have</div>
+    </div>
+    <div class="hdr-ava">👨‍🍳</div>
+  </div>
+
+  <!-- ═══ SCREENS ═══ -->
+  <div class="screens">
+
+    <!-- ─────────────────── PANTRY ─────────────────── -->
+    <div class="screen active" id="sc-pantry">
+
+      <div class="sec-head">
+        <h2>My Pantry</h2>
+        <p>Add what you have — we'll find your best matches</p>
+      </div>
+
+      <div class="scan-row">
+        <button class="btn-scan" id="scan-btn" onclick="doScan()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+          Scan Receipt
+        </button>
+        <button class="btn-add" onclick="doAdd()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Add
+        </button>
+      </div>
+
+      <div class="count-bar">
+        <span class="count-label">Pantry Items</span>
+        <span class="count-badge" id="item-count">12 items</span>
+      </div>
+
+      <div class="cat-label">Staples & Dry</div>
+      <div class="pantry-list" id="list-staples"></div>
+
+      <div class="cat-label">Fridge</div>
+      <div class="pantry-list" id="list-fridge"></div>
+
+      <button class="cta-find" onclick="goTab('recipes')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        Find Matching Recipes
+      </button>
+
+    </div>
+
+    <!-- ─────────────────── RECIPES ─────────────────── -->
+    <div class="screen" id="sc-recipes">
+
+      <div class="sec-head">
+        <h2>Matched Recipes</h2>
+        <p>Ranked by how much you already have</p>
+      </div>
+
+      <div class="filter-wrap">
+        <div class="filter-card">
+          <div class="filter-eyebrow">Shopping Threshold</div>
+          <div class="filter-top">
+            <span class="filter-question">Max new items to buy</span>
+            <span class="filter-val" id="thresh-disp">≤ 3</span>
+          </div>
+          <input type="range" class="slider" id="thresh-slider"
+            min="0" max="5" value="3" oninput="setThresh(+this.value)">
+          <div class="slider-ends">
+            <span>0 · pantry only</span>
+            <span>5 · anything goes</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="results-bar">
+        <span class="res-count"><strong id="rec-count">4</strong> recipes found</span>
+        <span class="sort-chip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 6h18M7 12h10M11 18h2"/>
+          </svg>
+          Best match first
+        </span>
+      </div>
+
+      <div class="rlist" id="recipe-list"></div>
+
+    </div>
+
+    <!-- ─────────────────── SKIPPI ─────────────────── -->
+    <div class="screen" id="sc-skippi">
+
+      <div class="skippi-hdr">
+        <div class="ski-ava">🤖</div>
+        <div class="ski-meta">
+          <h3>Skippi</h3>
+          <div class="ski-sub">
+            <div class="online-dot"></div>
+            <span>AI Chef · Always on</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="insight-banner">
+        <span class="insight-ico">💡</span>
+        <span class="insight-txt">
+          I scanned your pantry. <strong>12 ingredients detected</strong> — let me suggest some creative combos with what you have!
+        </span>
+      </div>
+
+      <div class="chat-feed" id="chat-feed"></div>
+
+      <div class="suggest-chips" id="s-chips">
+        <button class="sch" onclick="doSuggest('What can I make using only my pantry?')">🍳 Pantry-only meals</button>
+        <button class="sch" onclick="doSuggest('Use the heavy cream before it expires!')">🥛 Use cream soon</button>
+        <button class="sch" onclick="doSuggest('Surprise me with something creative!')">✨ Surprise me</button>
+      </div>
+
+      <div class="chat-bar">
+        <input class="chat-in" id="chat-in"
+          placeholder="Ask about your leftovers…"
+          onkeydown="if(event.key==='Enter')sendMsg()">
+        <button class="send-btn" onclick="sendMsg()">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+
+  </div><!-- /screens -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="bnav">
+    <button class="nbtn active" id="nb-pantry" onclick="goTab('pantry')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+        <polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+      <span class="nlabel">Pantry</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-recipes" onclick="goTab('recipes')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+      </svg>
+      <span class="nlabel">Matches</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-skippi" onclick="goTab('skippi')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+      </svg>
+      <span class="nlabel">Skippi</span>
+      <div class="ndot"></div>
+    </button>
+    <button class="nbtn" id="nb-more" onclick="toast('Meal Plan & Shopping coming soon!')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <circle cx="12" cy="12" r="1.2"/><circle cx="19" cy="12" r="1.2"/><circle cx="5" cy="12" r="1.2"/>
+      </svg>
+      <span class="nlabel">More</span>
+      <div class="ndot"></div>
+    </button>
+  </nav>
+
+</div><!-- /phone -->
+
+<script>
+/* ══════════════ DATA ══════════════ */
+
+const STAPLES = [
+  {id:1, e:'🫙', name:'Olive Oil',       unit:'250 ml bottle',    qty:1},
+  {id:2, e:'🍝', name:'Pasta',           unit:'400 g pack',       qty:2},
+  {id:3, e:'🧄', name:'Garlic',          unit:'cloves',           qty:3},
+  {id:4, e:'🫘', name:'Chickpeas',       unit:'400 g can',        qty:1},
+  {id:5, e:'🧂', name:'Sea Salt',        unit:'full box',         qty:1},
+  {id:6, e:'🫒', name:'Capers',          unit:'~3 tbsp left',     qty:1},
+];
+
+const FRIDGE = [
+  {id:7,  e:'🥚', name:'Eggs',           unit:'large',            qty:4},
+  {id:8,  e:'🌿', name:'Baby Spinach',   unit:'100 g bag',        qty:1},
+  {id:9,  e:'🍅', name:'Cherry Tomatoes',unit:'½ punnet',         qty:1},
+  {id:10, e:'🧀', name:'Parmesan',       unit:'80 g wedge',       qty:1},
+  {id:11, e:'🧅', name:'Onion',          unit:'medium',           qty:2},
+  {id:12, e:'🥛', name:'Heavy Cream',    unit:'~100 ml left',     qty:1},
+];
+
+const RECIPES = [
+  {
+    id:1, e:'🍝', name:'Spaghetti Aglio e Olio',
+    time:'20 min', diff:2, pct:95, need:0,
+    have:['Pasta','Garlic','Olive oil','Parmesan','Salt'],
+    buy:[],
+    bg:'linear-gradient(140deg,#2e1a0c 0%,#5c3010 55%,#1e1008 100%)',
+  },
+  {
+    id:2, e:'🍳', name:'Spinach & Egg Frittata',
+    time:'25 min', diff:2, pct:88, need:1,
+    have:['Eggs','Spinach','Onion','Parmesan','Olive oil'],
+    buy:['Bell pepper'],
+    bg:'linear-gradient(140deg,#18280e 0%,#2e4f14 55%,#0f1c09 100%)',
+  },
+  {
+    id:3, e:'🍜', name:'Creamy Tomato Pasta',
+    time:'30 min', diff:2, pct:82, need:2,
+    have:['Pasta','Cherry tomatoes','Heavy cream','Onion','Garlic'],
+    buy:['Fresh basil','Chili flakes'],
+    bg:'linear-gradient(140deg,#2e0e0e 0%,#5c1818 55%,#1e0808 100%)',
+  },
+  {
+    id:4, e:'🥘', name:'Chickpea & Spinach Stew',
+    time:'35 min', diff:3, pct:76, need:3,
+    have:['Chickpeas','Spinach','Onion','Garlic','Olive oil'],
+    buy:['Cumin','Smoked paprika','Canned tomatoes'],
+    bg:'linear-gradient(140deg,#16162e 0%,#28285a 55%,#0d0d20 100%)',
+  },
+  {
+    id:5, e:'🍲', name:'Shakshuka',
+    time:'28 min', diff:2, pct:68, need:4,
+    have:['Eggs','Cherry tomatoes','Onion','Garlic'],
+    buy:['Feta cheese','Cumin','Smoked paprika','Canned tomatoes'],
+    bg:'linear-gradient(140deg,#2e1e0a 0%,#60380c 55%,#1e1206 100%)',
+  },
+  {
+    id:6, e:'🫕', name:'Pasta Puttanesca',
+    time:'22 min', diff:2, pct:60, need:5,
+    have:['Pasta','Garlic','Capers','Olive oil'],
+    buy:['Anchovy paste','Olives','Canned tomatoes','Chili','Parsley'],
+    bg:'linear-gradient(140deg,#0e0e2e 0%,#1a1a50 55%,#080816 100%)',
+  },
+];
+
+/* ══════════════ STATE ══════════════ */
+let activeTab = 'pantry';
+let thresh = 3;
+let qtys = {};
+[...STAPLES,...FRIDGE].forEach(i => qtys[i.id] = i.qty);
+
+/* ══════════════ PANTRY ══════════════ */
+function renderPantry() {
+  buildList('list-staples', STAPLES);
+  buildList('list-fridge', FRIDGE);
+  document.getElementById('item-count').textContent =
+    `${STAPLES.length + FRIDGE.length} items`;
+}
+
+function buildList(id, items) {
+  document.getElementById(id).innerHTML = items.map((it,i) => `
+    <div class="pitem" style="animation-delay:${(i+1)*.05}s">
+      <div class="pitem-icon">${it.e}</div>
+      <div class="pitem-info">
+        <div class="pitem-name">${it.name}</div>
+        <div class="pitem-unit">${it.unit}</div>
+      </div>
+      <div class="qty">
+        <button class="qbtn" onclick="chQty(${it.id},-1)">−</button>
+        <span class="qval" id="q${it.id}">${qtys[it.id]}</span>
+        <button class="qbtn" onclick="chQty(${it.id},+1)">+</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function chQty(id, d) {
+  qtys[id] = Math.max(0, qtys[id] + d);
+  const el = document.getElementById('q' + id);
+  if (!el) return;
+  el.textContent = qtys[id];
+  el.style.transform = 'scale(1.35)';
+  el.style.color = d > 0 ? 'var(--green)' : 'var(--accent)';
+  setTimeout(() => { el.style.transform = ''; el.style.color = ''; }, 280);
+}
+
+function doScan() {
+  const btn = document.getElementById('scan-btn');
+  btn.innerHTML = '<span style="display:flex;align-items:center;gap:6px"><span style="animation:blink 0.6s infinite">📷</span> Scanning…</span>';
+  btn.style.opacity = '.75';
+  setTimeout(() => {
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+      </svg>Scan Receipt`;
+    btn.style.opacity = '';
+    toast('✓ Receipt scanned! 3 new items added to pantry.');
+  }, 2200);
+}
+
+function doAdd() {
+  toast('Type an ingredient or hold to voice-input.');
+}
+
+/* ══════════════ RECIPES ══════════════ */
+function renderRecipes() {
+  const list = RECIPES.filter(r => r.need <= thresh);
+  document.getElementById('rec-count').textContent = list.length;
+  document.getElementById('recipe-list').innerHTML = list.length
+    ? list.map((r,i) => recipeCard(r,i)).join('')
+    : `<div style="text-align:center;padding:40px 0;color:var(--tx2)">
+        <div style="font-size:40px;margin-bottom:10px">🤷</div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;color:var(--tx1);margin-bottom:6px">No matches at ≤${thresh}</div>
+        <div style="font-size:12.5px">Try raising the shopping threshold above</div>
+      </div>`;
+}
+
+function recipeCard(r, i) {
+  const cls = r.pct >= 80 ? 'hi' : r.pct >= 65 ? 'md' : 'lo';
+  const dots = '●'.repeat(r.diff) + '○'.repeat(4 - r.diff);
+  return `
+  <div class="rcard" style="animation-delay:${i*.07}s">
+    <div class="rcard-img">
+      <div class="rcard-bg" style="background:${r.bg}"></div>
+      <div class="rcard-grad"></div>
+      <div class="rcard-emoji">${r.e}</div>
+      <div class="match-tag ${cls}">${r.pct}% match</div>
+    </div>
+    <div class="rcard-body">
+      <div class="rcard-name">${r.name}</div>
+      <div class="rcard-meta">
+        <span class="rmeta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/>
+          </svg>
+          ${r.time}
+        </span>
+        <span class="rdiff">${dots}</span>
+      </div>
+      <div class="chips-row">
+        ${r.have.slice(0,4).map(n => `
+          <span class="chip have">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>${n}
+          </span>`).join('')}
+        ${r.have.length > 4 ? `<span class="chip have">+${r.have.length-4}</span>` : ''}
+      </div>
+      ${r.buy.length ? `
+        <div class="need-hdr">Need to buy</div>
+        <div class="chips-row">
+          ${r.buy.map(n => `
+            <span class="chip need">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>${n}
+            </span>`).join('')}
+        </div>` :
+        `<div class="all-good">✓ You have everything!</div>`}
+    </div>
+    <div class="rcard-foot">
+      <span class="have-tally"><strong>${r.have.length}</strong> of ${r.have.length+r.buy.length} ingredients</span>
+      <button class="btn-plan" onclick="toast('Added ${r.name} to Meal Plan!')">Add to Plan</button>
+    </div>
+  </div>`;
+}
+
+function setThresh(v) {
+  thresh = v;
+  document.getElementById('thresh-disp').textContent = `≤ ${v}`;
+  renderRecipes();
+}
+
+/* ══════════════ CHAT / SKIPPI ══════════════ */
+const INIT_MSGS = [
+  {
+    from:'bot',
+    text:`Hey! 👋 I've scanned your pantry and honestly — <strong>you're in great shape</strong>.<br><br>
+You've got eggs, cream, and parmesan. There's a silky carbonara hiding in there right now. 🍝`,
+    ts:'18:39',
+  },
+  {
+    from:'user',
+    text:`What about the 3 tbsp of peanut butter I found and that half onion?`,
+    ts:'18:40',
+  },
+  {
+    from:'bot',
+    text:`Love this challenge. 🥜 Three ideas:<br>
+<ul>
+  <li><strong>Peanut noodles</strong> — PB + soy + garlic + lemon. Toss with your pasta. 10 min.</li>
+  <li><strong>West African stew</strong> — PB + onion + chickpeas + spices. Deeply comforting.</li>
+  <li><strong>Peanut dipping sauce</strong> — blend PB, capers, olive oil, lemon. Serve with soft-boiled eggs.</li>
+</ul>`,
+    ts:'18:40',
+  },
+];
+
+const REPLIES = [
+  `Your cream is the most time-sensitive item. Best move: <strong>creamy pasta tonight</strong> — pasta + cream + parmesan + garlic. Twenty minutes, restaurant quality. 🧀`,
+  `Pantry-only mode! Here's what I see:<br>
+<ul>
+  <li><strong>Aglio e Olio</strong> — pasta, garlic, olive oil, parmesan. Zero shopping.</li>
+  <li><strong>Caper spaghetti</strong> — same base, add capers for a briny punch.</li>
+  <li><strong>Scrambled eggs</strong> — eggs + cream + spinach + a pinch of salt. Pure comfort.</li>
+</ul>`,
+  `Okay here's my wildcard pick: <strong>Pantry Frittata</strong>. Eggs + cream + spinach + onion + parmesan, baked in a pan. Uses your most perishable items in one shot. 20 min, no shopping. 🍳`,
+  `You've got beautiful building blocks. Start with garlic in olive oil — that's the base of a thousand great dishes. Then just follow your instincts and taste as you go. I'll guide you step by step if you want. 👨‍🍳`,
+  `Great question! The chickpeas are your secret weapon — rinse them, toss in olive oil with garlic and capers, roast at 200°C for 20 min. Incredible texture, zero effort.`,
+];
+let msgs = [...INIT_MSGS];
+let ri = 0;
+
+function renderChat() {
+  document.getElementById('chat-feed').innerHTML = msgs.map((m,i) => `
+    <div class="msg ${m.from==='bot'?'bot':'user'}" style="animation-delay:${i*.1}s">
+      ${m.from==='bot'
+        ? `<div class="msg-ava">🤖</div>`
+        : `<div class="msg-ava u">👤</div>`}
+      <div class="bubble-col">
+        <div class="bubble">${m.text}</div>
+        <div class="msg-ts">${m.ts}</div>
+      </div>
+    </div>`).join('');
+  scrollFeed();
+}
+
+function sendMsg() {
+  const inp = document.getElementById('chat-in');
+  const txt = inp.value.trim();
+  if (!txt) return;
+  inp.value = '';
+  pushUser(txt);
+}
+
+function doSuggest(txt) { pushUser(txt); }
+
+function pushUser(txt) {
+  const now = new Date();
+  const ts = `${now.getHours()}:${String(now.getMinutes()).padStart(2,'0')}`;
+  msgs.push({from:'user', text:txt, ts});
+  renderChat();
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    msgs.push({from:'bot', text:pickReply(txt), ts});
+    renderChat();
+  }, 1700);
+}
+
+function pickReply(t) {
+  const l = t.toLowerCase();
+  if (l.includes('cream')||l.includes('expir')) return REPLIES[0];
+  if (l.includes('pantry')||l.includes('only')) return REPLIES[1];
+  if (l.includes('surprise')||l.includes('creative')) return REPLIES[2];
+  if (l.includes('chicken')||l.includes('chickp')) return REPLIES[4];
+  return REPLIES[ri++ % REPLIES.length];
+}
+
+function showTyping() {
+  const feed = document.getElementById('chat-feed');
+  const d = document.createElement('div');
+  d.id = 'typing';d.className = 'typing-row';
+  d.innerHTML = `
+    <div class="msg-ava">🤖</div>
+    <div class="typing-bbl">
+      <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+    </div>`;
+  feed.appendChild(d);
+  scrollFeed();
+}
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+function scrollFeed() {
+  const screen = document.getElementById('sc-skippi');
+  setTimeout(() => { screen.scrollTop = screen.scrollHeight; }, 60);
+}
+
+/* ══════════════ TABS ══════════════ */
+function goTab(tab) {
+  if (tab === activeTab) return;
+
+  const prev = document.getElementById('sc-' + activeTab);
+  const next = document.getElementById('sc-' + tab);
+  const pnav = document.getElementById('nb-' + activeTab);
+  const nnav = document.getElementById('nb-' + tab);
+
+  prev.classList.add('out-left');
+  setTimeout(() => prev.classList.remove('active','out-left'), 280);
+  setTimeout(() => next.classList.add('active'), 140);
+
+  pnav.classList.remove('active');
+  nnav.classList.add('active');
+  activeTab = tab;
+
+  if (tab === 'recipes') renderRecipes();
+}
+
+/* ══════════════ TOAST ══════════════ */
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+/* ══════════════ INIT ══════════════ */
+renderPantry();
+renderChat();
+</script>
+</body>
+</html>
